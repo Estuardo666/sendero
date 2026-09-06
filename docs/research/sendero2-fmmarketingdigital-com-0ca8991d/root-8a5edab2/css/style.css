@@ -1,0 +1,34 @@
+/*
+ Theme Name:   Bricks Child Theme
+ Theme URI:    https://bricksbuilder.io/
+ Description:  Use this child theme to extend Bricks.
+ Author:       Bricks
+ Author URI:   https://bricksbuilder.io/
+ Template:     bricks
+ Version:      1.0
+ Text Domain:  bricks
+*/
+
+/* Tipografia global del sitio. */
+:root {
+	--sendero-font-family: "Google Sans Flex", sans-serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+	font-family: var(--sendero-font-family);
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -2px !important;
+}
+
+.bc-letter-launcher__inner {
+	letter-spacing: -2px !important;
+}

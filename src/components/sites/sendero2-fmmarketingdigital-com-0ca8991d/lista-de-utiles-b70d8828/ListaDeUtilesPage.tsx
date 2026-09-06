@@ -1,0 +1,128 @@
+import { BlurReveal } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/BlurReveal";
+import { LazyVideo } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/LazyVideo";
+import { LetterLauncher } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/LetterLauncher";
+import { SiteFooter } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/SiteFooter";
+import { SiteHeader } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/SiteHeader";
+import { WhatsAppWidget } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/WhatsAppWidget";
+
+import type { Chrome } from "../shared/content";
+const ROOT = "/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/images";
+const ADMISSIONS_FILES = "/sites/sendero2-fmmarketingdigital-com-0ca8991d/admisiones-02e74418/files";
+const FILES = "/sites/sendero2-fmmarketingdigital-com-0ca8991d/lista-de-utiles-b70d8828/files";
+const RESOURCES = [
+  ["Lista de útiles Inicial 1", "Campaña Sendero copy | agosto 28, 2025", `${ADMISSIONS_FILES}/Campana-Sendero-copy.pdf`],
+  ["Lista de útiles Inicial 2", "Sendero | agosto 28, 2025", `${ADMISSIONS_FILES}/Sendero.docx`],
+  ["Lista de útiles Básica 2025", "SenderoMatriculateYa | agosto 28, 2025", `${ROOT}/SenderoMatriculateYa.mp4`],
+  ["Lista de útiles Básica", "SENDERO campaña | agosto 28, 2025", `${FILES}/SENDERO-campana.docx`],
+] as const;
+
+const PAGE_CSS = `
+.lista-page { overflow-x: hidden; background: #fff; }
+.lista-page .resource-hero { position: relative; display: flex; min-height: 313px; margin-top: -53px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 95px 20px 0; }
+.lista-page .resource-hero > * { position: relative; z-index: 1; }
+.lista-page .resource-video { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.lista-page .resource-video video { width: 100%; height: 100%; object-fit: cover; }
+.lista-page .resource-video::after { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.74); }
+.lista-page .resource-eyebrow { margin: 0 0 16px; border-radius: 16px; background: rgba(255,193,7,.25); padding: 1px 10px 2px; color: #0099a5; font-size: 16px; font-weight: 600; line-height: 23px; }
+.lista-page .resource-title { margin: 0; color: #0099a5; font-size: clamp(54px,5.1vw,75px); font-weight: 800; line-height: 1.05; text-align: center; text-shadow: 2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,6px 0 #fdb92e,-6px 0 #fdb92e,0 6px #fdb92e,0 -6px #fdb92e,4px 4px #fdb92e,-4px -4px #fdb92e; }
+.lista-page .resource-down { display: grid; width: 40px; height: 40px; margin-top: 42px; place-items: center; border-radius: 50%; background: rgba(245,245,245,.9); color: #0099a5; font-size: 25px; }
+.lista-page .resources-section { padding: 85px 20px 45px; }
+.lista-page .resources-grid { display: grid; width: min(1000px,100%); grid-template-columns: repeat(3,minmax(0,320px)); justify-content: space-between; gap: 14px 13px; }
+.lista-page .resource-card { display: flex; min-height: 150px; flex-direction: column; align-items: flex-start; justify-content: center; border-radius: 20px; background: #f1f1f1; padding: 12px 13px; transition: transform 220ms cubic-bezier(0.23,1,0.32,1), box-shadow 220ms cubic-bezier(0.23,1,0.32,1); }
+.lista-page .resource-card:nth-child(4) { grid-column: 2; }
+.lista-page .resource-card h2 { margin: 0 0 12px; color: #1c2728; font-size: 23px; font-weight: 800; line-height: 1.05; }
+.lista-page .resource-card p { margin: 0 0 8px; color: #363636; font-size: 11px; line-height: 1.1; }
+.lista-page .resource-card a { display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; background: #ffc107; padding: 8px 15px; color: #1c2728; font-size: 15px; font-weight: 600; text-decoration: none; }
+@media (hover: hover) and (pointer: fine) {
+  .lista-page .resource-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(28,39,40,.1); }
+  .lista-page .resource-card a:hover { background: #ffd84d; transform: translateY(-1px); }
+}
+@media (max-width: 767px) {
+  .lista-page .resource-hero { padding-inline: 16px; }
+  .lista-page .resource-title { font-size: 54px; }
+  .lista-page .resources-grid { grid-template-columns: 1fr; }
+  .lista-page .resource-card:nth-child(4) { grid-column: auto; }
+}
+`;
+
+function ResourceCard({
+  title,
+  meta,
+  href,
+  cta,
+}: {
+  title: string;
+  meta: string;
+  href: string;
+  cta?: string;
+}) {
+  return (
+    <article className="resource-card">
+      <h2>{title}</h2>
+      <p>{meta}</p>
+      <a href={href} download>
+        {cta ?? "Descargar"} <span aria-hidden="true">↧</span>
+      </a>
+    </article>
+  );
+}
+
+export interface ListaDeUtilesPageProps {
+  chrome: Chrome;
+  video?: string;
+  antetitulo?: string;
+  titulo?: string;
+  textoDescarga?: string;
+  recursos?: { titulo: string; detalle: string; url: string }[];
+}
+
+export function ListaDeUtilesPage({
+  chrome,
+  video,
+  antetitulo,
+  titulo,
+  textoDescarga,
+  recursos,
+}: ListaDeUtilesPageProps) {
+
+  return (
+    <div className="sendero-root sendero-base15 lista-page flex min-h-full flex-col">
+      <style dangerouslySetInnerHTML={{ __html: PAGE_CSS }} />
+      <SiteHeader {...chrome.header} />
+      <main className="flex-1">
+        <section className="resource-hero">
+          <div className="resource-video" aria-hidden="true"><LazyVideo src={video || `${ROOT}/bg1c.mp4`} /></div>
+          <BlurReveal as="h3" className="resource-eyebrow">
+            {antetitulo ?? "Recursos para padres de familia"}
+          </BlurReveal>
+          <LetterLauncher as="h1" className="resource-title">
+            {titulo ?? "Lista de útiles"}
+          </LetterLauncher>
+          <span className="resource-down" aria-hidden="true">↓</span>
+        </section>
+        <section className="resources-section brx-section">
+          <div className="resources-grid">
+            {(
+              recursos ??
+              RESOURCES.map(([title, meta, href]) => ({
+                titulo: title,
+                detalle: meta,
+                url: href,
+              }))
+            ).map((recurso) => (
+              <ResourceCard
+                key={recurso.url}
+                title={recurso.titulo}
+                meta={recurso.detalle}
+                href={recurso.url}
+                cta={textoDescarga}
+              />
+            ))}
+          </div>
+        </section>
+      </main>
+      <SiteFooter {...chrome.footer} />
+      <WhatsAppWidget {...chrome.whatsapp} />
+    </div>
+  );
+}

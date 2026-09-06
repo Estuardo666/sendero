@@ -4,10 +4,39 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "Google Sans";
+  src: url("/fonts/GoogleSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("/fonts/GoogleSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("/fonts/GoogleSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("/fonts/GoogleSans-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Google Sans", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -126,5 +155,491 @@
   }
   html {
     @apply font-sans;
+  }
+}
+/* ============================================================
+   Sendero clone — site tokens & Bricks layout primitives
+   Source: sendero2.fmmarketingdigital.com (Bricks builder)
+   ============================================================ */
+:root {
+  --sendero-teal: #0099a5;
+  --sendero-teal-deep: #366068;
+  --sendero-dark: #1c2728;
+  --sendero-amber: #ffc107;
+  --sendero-white: #ffffff;
+  --sendero-offwhite: #f5f5f5;
+  --sendero-gray: #808080;
+  --sendero-text: #363636;
+  --sendero-container: 1260px;
+}
+
+.sendero-root {
+  font-family: "Google Sans", ui-sans-serif, system-ui, sans-serif;
+  color: var(--sendero-text);
+  background: #fff;
+}
+
+/* Bricks section/container primitives (frontend.min.css) */
+.sendero-root .brx-section {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  width: 100%;
+  position: relative;
+}
+.sendero-root .brx-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  width: var(--sendero-container);
+  max-width: 100%;
+}
+@media (max-width: 1300px) {
+  .sendero-root .brx-container { width: 100%; padding-inline: 20px; }
+}
+
+/* Background video wrapper */
+.sendero-root .brx-bg-video {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background-size: cover;
+}
+.sendero-root .brx-bg-video video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  max-width: none;
+}
+
+/* Arrow Button v2 (next_arrow_button_v2.css) */
+.nb-arrow-button-v2 {
+  --height: calc(var(--dimensions) + var(--padding-top) + var(--padding-bottom));
+  padding-left: var(--padding-left);
+  padding-right: calc(var(--gap) + var(--dimensions));
+  height: var(--height);
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+}
+.nb-arrow-button-v2 svg { min-width: unset; min-height: unset; width: var(--dimensions); height: var(--dimensions); }
+.nb-arrow-button-v2__arrow-wrapper {
+  width: calc(100% - var(--padding-right) * 2);
+  height: var(--dimensions);
+  clip-path: inset(0 0 0 calc(100% - var(--dimensions)) round 100px);
+  transition: clip-path var(--duration) var(--ease);
+  display: flex;
+  align-items: center;
+  position: absolute;
+  z-index: -1;
+  right: var(--padding-right);
+}
+.nb-arrow-button-v2__arrow-container { position: absolute; right: 0; width: var(--dimensions); height: var(--dimensions); }
+.nb-arrow-button-v2__arrow {
+  transform: rotate(var(--arrow-default-rotation));
+  transition: transform var(--duration) var(--ease);
+  stroke: var(--stroke);
+  fill: var(--stroke);
+}
+.nb-arrow-button-v2__text {
+  color: var(--nb-text, inherit);
+  transition: color var(--duration) var(--ease);
+}
+/* The expanding arrow circle covers the pill background, so the label has to
+   move off its rest colour or it vanishes (white on white for the teal
+   variants). --nb-text-hover defaults to the arrow's own stroke colour, which
+   the source already draws on top of --arrow-background. The hover half lives
+   in the (hover: hover) block below, next to the fill it has to match. */
+.sendero-root .nb-arrow-button-v2:focus-visible .nb-arrow-button-v2__text,
+.sendero-root .nb-arrow-button-v2[data-hovered="true"] .nb-arrow-button-v2__text {
+  color: var(--nb-text-hover, var(--stroke));
+}
+.sendero-root .nb-arrow-button-v2:focus-visible .nb-arrow-button-v2__arrow-wrapper,
+.sendero-root .nb-arrow-button-v2[data-hovered="true"] .nb-arrow-button-v2__arrow-wrapper { clip-path: inset(0 round 100px); }
+.sendero-root .nb-arrow-button-v2:focus-visible .nb-arrow-button-v2__arrow,
+.sendero-root .nb-arrow-button-v2[data-hovered="true"] .nb-arrow-button-v2__arrow { transform: rotate(var(--arrow-rotation)); }
+
+/* ============================================================
+   Motion system
+   All interactive state changes share the same responsive curves. The
+   movement is deliberately small and transform/opacity-led so it stays
+   interruptible and does not make the pages feel slow.
+   ============================================================ */
+:root {
+  --sendero-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --sendero-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --sendero-duration-press: 140ms;
+  --sendero-duration-ui: 220ms;
+  --sendero-duration-enter: 280ms;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: sendero-view-out 160ms var(--sendero-ease-out) both;
+}
+
+::view-transition-new(root) {
+  animation: sendero-view-in 240ms var(--sendero-ease-out) both;
+}
+
+@keyframes sendero-view-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sendero-view-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-4px); }
+}
+
+.sendero-root :is(a, button, summary, input, select, textarea) {
+  transition:
+    color var(--sendero-duration-press) ease,
+    background-color var(--sendero-duration-press) ease,
+    border-color var(--sendero-duration-press) ease,
+    box-shadow var(--sendero-duration-ui) var(--sendero-ease-out),
+    opacity var(--sendero-duration-press) var(--sendero-ease-out),
+    transform var(--sendero-duration-press) var(--sendero-ease-out);
+}
+
+.sendero-root :is(a, button):active {
+  transform: scale(0.97);
+}
+
+.sendero-root :is(a, button, summary):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--sendero-amber) 75%, white);
+  outline-offset: 3px;
+}
+
+.sendero-root :is(input, select, textarea):focus {
+  border-color: var(--sendero-teal);
+  box-shadow: 0 0 0 3px rgba(0, 153, 165, 0.14);
+  outline: none;
+}
+
+/* Scroll-entered headings use a transition rather than a one-shot keyframe,
+   so they can be revealed only once and remain interruptible. */
+.sendero-root :is(.next-blur-reveal, .bc-letter-launcher) {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance, 12px), 0);
+  transition:
+    opacity var(--reveal-duration, var(--sendero-duration-enter)) var(--sendero-ease-out) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, var(--sendero-duration-enter)) var(--sendero-ease-out) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.sendero-root :is(.next-blur-reveal, .bc-letter-launcher)[data-reveal="visible"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.sendero-root video[data-lazy-video] {
+  opacity: 0;
+  transition: opacity 240ms var(--sendero-ease-out);
+}
+
+.sendero-root video[data-lazy-video][data-lazy-ready="true"] {
+  opacity: 1;
+}
+
+/* Shared card feedback on the home sections. */
+.sendero-root .bricks-layout-inner,
+.sendero-root .brxe-video {
+  transition: transform 220ms var(--sendero-ease-out), box-shadow 220ms var(--sendero-ease-out);
+}
+
+.sendero-root .bricks-layout-item img,
+.sendero-root .bricks-video-preview-image {
+  transition: transform 280ms var(--sendero-ease-out), filter 220ms ease-out, opacity 220ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sendero-root .bricks-layout-item:hover .bricks-layout-inner,
+  .sendero-root .brxe-video:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(28, 39, 40, 0.12);
+  }
+
+  .sendero-root .bricks-layout-item:hover img,
+  .sendero-root .brxe-video:hover .bricks-video-preview-image {
+    transform: scale(1.025);
+    filter: saturate(1.08);
+  }
+}
+
+/* The click-to-expand arrow button uses clip-path for the expanding fill,
+   avoiding a width reflow while preserving the source's visual treatment. */
+.sendero-root .nb-arrow-button-v2__arrow-wrapper {
+  pointer-events: none;
+}
+
+/* Shared FAQ/accordion motion. Keeping the panel mounted lets the same
+   transition run in both directions, including the close state. */
+.sendero-root .motion-accordion {
+  overflow: hidden;
+}
+
+.sendero-root .motion-accordion__trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sendero-root .motion-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    grid-template-rows 260ms var(--sendero-ease-out),
+    opacity 180ms var(--sendero-ease-out),
+    transform 220ms var(--sendero-ease-out);
+}
+
+.sendero-root .motion-accordion__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sendero-root .motion-accordion[data-open="true"] .motion-accordion__panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sendero-root .motion-accordion__icon {
+  flex: 0 0 auto;
+  transition: transform 220ms var(--sendero-ease-out);
+}
+
+.sendero-root .motion-accordion[data-open="true"] .motion-accordion__icon {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sendero-root .nb-arrow-button-v2:hover .nb-arrow-button-v2__arrow-wrapper {
+    clip-path: inset(0 round 100px);
+  }
+
+  .sendero-root .nb-arrow-button-v2:hover .nb-arrow-button-v2__arrow {
+    transform: rotate(var(--arrow-rotation));
+  }
+
+  .sendero-root .nb-arrow-button-v2:hover .nb-arrow-button-v2__text {
+    color: var(--nb-text-hover, var(--stroke));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms;
+  }
+
+  .sendero-root :is(.next-blur-reveal, .bc-letter-launcher) {
+    transition: opacity 180ms ease-out;
+    transform: none;
+    will-change: opacity;
+  }
+
+  .sendero-root .motion-accordion__panel,
+  .sendero-root .motion-accordion__icon {
+    transition-duration: 180ms;
+    transform: none;
+  }
+
+  .sendero-root video[data-lazy-video] {
+    transition-duration: 180ms;
+  }
+
+  .sendero-root .bricks-layout-inner,
+  .sendero-root .brxe-video {
+    transition: box-shadow 180ms ease-out;
+  }
+
+  .sendero-root .bricks-layout-item img,
+  .sendero-root .bricks-video-preview-image {
+    transition: filter 180ms ease-out, opacity 180ms ease-out;
+  }
+
+  .sendero-root :is(a, button):active {
+    transform: none;
+  }
+}
+
+/* Bricks heading defaults (frontend.min.css) — the source's em-based heading
+   font sizes are relative to these, so Tailwind preflight's 1em headings made
+   every title render far too small. */
+.sendero-root :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  /* UA default weight, which the source relies on and Tailwind preflight drops. */
+  font-weight: bold;
+  line-height: 1.4;
+  text-rendering: optimizeLegibility;
+}
+.sendero-root h1 { font-size: 2.4em; }
+.sendero-root h2 { font-size: 2.1em; }
+.sendero-root h3 { font-size: 1.8em; }
+.sendero-root h4 { font-size: 1.6em; }
+.sendero-root h5 { font-size: 1.3em; }
+.sendero-root h6 { font-size: 1.1em; }
+
+/* ============================================================
+   NextBricks element primitives used by /quienes-somos and /contacto
+   Sources: next_tiles.css, next_infinite_slider.css,
+            next_interactive_divider.css
+   ============================================================ */
+
+/* Tiles (next_tiles.css) */
+.sendero-root .next-tiles {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  --offset: 20px;
+  --mouseenter-color: rgba(236, 236, 236, 1);
+  --mouseleave-color: rgba(129, 129, 129, 1);
+  --duration: 0.2s;
+  --easing: ease-in-out;
+}
+.sendero-root .next-tiles__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sendero-root .next-tiles__squares-layout {
+  position: absolute;
+  top: calc(-50% - var(--offset));
+  left: calc(-50% - var(--offset));
+  width: 100%;
+  height: 100%;
+}
+.sendero-root .next-tiles__square {
+  position: absolute;
+  border: 0.5px solid rgba(255, 255, 255, 0.49);
+  transition: background-color var(--duration) var(--easing);
+}
+.sendero-root .next-tiles__square--mouseleave { background-color: var(--mouseleave-color); }
+.sendero-root .next-tiles__square--mouseenter { background-color: var(--mouseenter-color); }
+
+/* Infinite slider (next_infinite_slider.css) */
+.sendero-root .nb-infinite-slider {
+  overflow: hidden;
+  cursor: grab;
+  height: var(--items-height);
+  touch-action: pan-y;
+}
+.sendero-root .nb-infinite-slider--is-dragging { cursor: grabbing; }
+.sendero-root .nb-infinite-slider__wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.sendero-root .nb-infinite-slider__item {
+  position: absolute;
+  width: var(--items-width);
+  height: var(--items-height);
+  overflow: hidden;
+  /* Bricks emits border width/colour with style:none, so nothing is painted;
+     Tailwind preflight would otherwise force a solid border. */
+  border: 2px none var(--sendero-offwhite);
+  border-radius: 2em;
+}
+.sendero-root .nb-infinite-slider__item:hover { border-color: var(--sendero-amber); }
+.sendero-root .nb-infinite-slider__item img {
+  user-select: none;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Interactive divider (next_interactive_divider.css) */
+.sendero-root .next-interactive-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  --divider-height: 1px;
+  --drag-height: 40px;
+  --drop-height: 500px;
+}
+.sendero-root .next-interactive-divider__line {
+  height: var(--divider-height);
+  width: 100%;
+  position: relative;
+}
+.sendero-root .next-interactive-divider__svg {
+  width: 100%;
+  height: var(--drop-height);
+  position: absolute;
+  top: calc(-1 * var(--drop-height) / 2);
+  overflow: visible;
+}
+.sendero-root .next-interactive-divider__path {
+  stroke-width: var(--divider-height);
+  fill: none;
+}
+.sendero-root .next-interactive-divider__box {
+  height: var(--drag-height);
+  width: 100%;
+  position: relative;
+  top: calc(-1 * var(--drag-height) / 2);
+  z-index: 1;
+}
+.sendero-root .next-interactive-divider__box:hover {
+  height: var(--drop-height);
+  top: calc(-1 * var(--drop-height) / 2);
+}
+
+/* Source root sizing: html { font-size: 10px }, body { font-size: 15px; line-height: 25.5px }.
+   Every Bricks `em` value resolves against that 15px base. Applied as an opt-in class so the
+   already-shipped `/` clone keeps its current metrics. */
+.sendero-base15 {
+  font-size: 15px;
+  line-height: 25.5px;
+}
+
+/* Theme-level heading tracking on the source (verified on h1 and h3 of both new pages),
+   expressed as an em ratio instead of a fixed px so it scales with each heading's own
+   font-size. A fixed -2px is right for a 36px h1 but crushes/overlaps small h3 elements
+   reused as pills and nav labels (badges, footer "Síguenos...", offcanvas nav items).
+   Scoped to the pages that opt into the 15px base so the existing `/` clone is untouched. */
+.sendero-base15 :is(h1, h2, h3, h4, h5, h6) {
+  letter-spacing: -0.056em;
+}
+
+/* Bricks wraps every section/container below 767px (frontend.min.css). Without this the
+   percentage-width columns shrink instead of stacking on phones. Scoped to the new pages. */
+@media (max-width: 767px) {
+  .sendero-base15 .brx-container {
+    flex-wrap: wrap;
   }
 }

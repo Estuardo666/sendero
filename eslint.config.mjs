@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendor CSS/JS downloaded from the clone target for reference only.
+    "docs/research/**",
   ]),
 ]);
 

@@ -1,0 +1,18 @@
+/*
+* Blur reveal
+*/
+.next-blur-reveal__anchor{
+    display: block;
+    width: fit-content;
+    height: fit-content;
+}
+.next-blur-reveal{
+    display: block;
+    width: fit-content;
+}
+.next-blur-reveal__inner{
+    display: block;
+}
+.next-blur-reveal__inner--to-hide{
+    opacity: 0;
+}
