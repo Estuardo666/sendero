@@ -171,12 +171,23 @@
   --sendero-gray: #808080;
   --sendero-text: #363636;
   --sendero-container: 1260px;
+  /* Alto del pill de la cabecera flotante: 10px de margen + 75px de alto. */
+  --sendero-header-alto: 85px;
 }
 
 .sendero-root {
   font-family: "Google Sans", ui-sans-serif, system-ui, sans-serif;
   color: var(--sendero-text);
   background: #fff;
+}
+
+/* La cabecera es fixed, así que no reserva espacio: el contenido lo compensa.
+   Las páginas con hero a pantalla completa pasan por debajo (--hero). */
+.sendero-root > main {
+  padding-top: var(--sendero-header-alto);
+}
+.sendero-root--hero > main {
+  padding-top: 0;
 }
 
 /* Bricks section/container primitives (frontend.min.css) */

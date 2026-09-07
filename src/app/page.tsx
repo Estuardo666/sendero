@@ -48,7 +48,7 @@ export default async function Home() {
     .reverse();
 
   return (
-    <div className="sendero-root flex min-h-full flex-col">
+    <div className="sendero-root sendero-root--hero flex min-h-full flex-col">
       <SiteHeader {...chrome.header} />
       {/* #brx-content — flex:1, relative, overflow-x hidden */}
       <main className="relative w-full flex-1 overflow-x-hidden">

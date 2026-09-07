@@ -21,10 +21,19 @@ const LOGO_SRC =
    ------------------------------------------------------------------ */
 const HEADER_CSS = `
 #brx-header {
-  position: sticky;
+  /* Flota sobre el contenido: no ocupa sitio en el flujo, así el hero
+     arranca en el borde superior de la ventana. */
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   width: 100%;
+  background: transparent;
+  pointer-events: none;
+}
+#brx-header > * {
+  pointer-events: auto;
 }
 
 /* ---------- section #brxe-hvpcew ---------- */

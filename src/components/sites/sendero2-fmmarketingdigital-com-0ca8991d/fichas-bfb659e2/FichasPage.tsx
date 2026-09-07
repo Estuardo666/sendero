@@ -10,7 +10,7 @@ const ROOT = "/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/imag
 const FILES = "/sites/sendero2-fmmarketingdigital-com-0ca8991d/admisiones-02e74418/files";
 const PAGE_CSS = `
 .fichas-page { overflow-x: hidden; background: #fff; }
-.fichas-page .resource-hero { position: relative; display: flex; min-height: 313px; margin-top: -53px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 95px 20px 0; }
+.fichas-page .resource-hero { position: relative; display: flex; min-height: 313px; margin-top: -85px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 127px 20px 0; }
 .fichas-page .resource-hero > * { position: relative; z-index: 1; }
 .fichas-page .resource-video { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .fichas-page .resource-video video { width: 100%; height: 100%; object-fit: cover; }

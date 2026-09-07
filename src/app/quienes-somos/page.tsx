@@ -30,7 +30,7 @@ export default async function QuienesSomosPage() {
   ]);
 
   return (
-    <div className="sendero-root sendero-base15 flex min-h-full flex-col">
+    <div className="sendero-root sendero-root--hero sendero-base15 flex min-h-full flex-col">
       <SiteHeader {...chrome.header} />
       {/* #brx-content — flex:1, relative, overflow-x hidden */}
       <main className="relative w-full flex-1 overflow-x-hidden">

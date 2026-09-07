@@ -27,7 +27,9 @@ const PAGE_CSS = `
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  padding: 52px 24px 96px;
+  /* Sube bajo la cabecera flotante y recupera el hueco con el padding. */
+  margin-top: -85px;
+  padding: 137px 24px 96px;
   /* Flat teal-to-white wash. The source used a looping background video here;
      a static gradient keeps the same colour arc without the download. */
   background: linear-gradient(180deg, #ffffff 0%, #f2fbfc 34%, #d6f0f3 72%, #b6e6ea 100%);
@@ -37,7 +39,7 @@ const PAGE_CSS = `
 .oferta-educativa-page .oferta-eyebrow { margin: 0 0 8px; border-radius: 16px; padding: 1px 10px 2px; background: #ebebeb; color: ${TEAL}; font-size: 16.5px; font-weight: 600; line-height: 23px; }
 .oferta-educativa-page .oferta-title { margin: 20px 0; padding: 10px; color: ${TEAL}; font-size: clamp(48px, 5.2vw, 75px); font-weight: 800; line-height: 1.05; letter-spacing: -2px; text-align: center; text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1.5px 1.5px #fff, -1.5px -1.5px #fff, 1.5px -1.5px #fff, -1.5px 1.5px #fff, 6px 0 #fdb92e, -6px 0 #fdb92e, 0 6px #fdb92e, 0 -6px #fdb92e, 4px 4px #fdb92e, -4px -4px #fdb92e, 4px -4px #fdb92e, -4px 4px #fdb92e; }
 @media (max-width: 767px) {
-  .oferta-educativa-page .oferta-hero { padding: 52px 16px 64px; }
+  .oferta-educativa-page .oferta-hero { padding: 137px 16px 64px; }
   .oferta-educativa-page .oferta-eyebrow { display: none; }
   .oferta-educativa-page .oferta-title { width: 360px; max-width: 100%; font-size: 64px; line-height: 1.1; }
 }

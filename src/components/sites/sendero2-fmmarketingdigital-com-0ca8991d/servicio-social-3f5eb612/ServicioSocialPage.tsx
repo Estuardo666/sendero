@@ -28,7 +28,7 @@ const ANNOUNCEMENTS: Announcement[] = [
 
 const PAGE_CSS = `
 .social-page { overflow-x: hidden; background: #fff; }
-.social-page .social-hero { position: relative; display: flex; min-height: 278px; margin-top: -53px; flex-direction: column; align-items: center; justify-content: center; padding: 45px 20px 0; }
+.social-page .social-hero { position: relative; display: flex; min-height: 278px; margin-top: -85px; flex-direction: column; align-items: center; justify-content: center; padding: 110px 20px 0; }
 .social-page .social-eyebrow { margin: 0 0 16px; border-radius: 16px; background: rgba(255,193,7,.2); padding: 1px 10px 2px; color: #0099a5; font-size: 16px; font-weight: 600; line-height: 23px; }
 .social-page .social-title { margin: 0; color: #0099a5; font-size: clamp(54px,5.1vw,75px); font-weight: 800; line-height: 1.05; text-align: center; text-shadow: 2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,6px 0 #fdb92e,-6px 0 #fdb92e,0 6px #fdb92e,0 -6px #fdb92e,4px 4px #fdb92e,-4px -4px #fdb92e; }
 .social-page .social-content { display: grid; width: min(1656px,calc(100% - 80px)); grid-template-columns: 320px minmax(0,1fr); align-items: start; gap: 20px; margin: 0 auto; padding: 0 0 45px; }

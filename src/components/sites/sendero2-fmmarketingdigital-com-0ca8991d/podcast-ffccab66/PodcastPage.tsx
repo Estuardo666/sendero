@@ -27,7 +27,7 @@ const EPISODES: EpisodioPodcast[] = [
 
 const PAGE_CSS = `
 .podcast-page { overflow-x: hidden; background: #fff; }
-.podcast-page .podcast-hero { position: relative; display: flex; min-height: 435px; margin-top: -53px; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; background: linear-gradient(180deg,rgba(0,153,165,.58),rgba(0,153,165,.16) 48%,#fff 100%); padding: 52px 20px 0; text-align: center; }
+.podcast-page .podcast-hero { position: relative; display: flex; min-height: 435px; margin-top: -85px; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; background: linear-gradient(180deg,rgba(0,153,165,.58),rgba(0,153,165,.16) 48%,#fff 100%); padding: 110px 20px 0; text-align: center; }
 .podcast-page .podcast-eyebrow { margin: 0 0 16px; border-radius: 16px; background: rgba(255,193,7,.23); padding: 1px 10px 2px; color: #0099a5; font-size: 16px; font-weight: 600; line-height: 23px; }
 .podcast-page .podcast-title { margin: 0; color: #0099a5; font-size: clamp(54px,5.1vw,75px); font-weight: 800; line-height: 1.05; text-shadow: 2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,6px 0 #fdb92e,-6px 0 #fdb92e,0 6px #fdb92e,0 -6px #fdb92e,4px 4px #fdb92e,-4px -4px #fdb92e; }
 .podcast-page .podcast-description { width: min(666px,100%); margin: 38px 0 0; color: #1c2728; font-size: 15px; font-weight: 500; line-height: 1.45; }

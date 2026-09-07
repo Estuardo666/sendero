@@ -47,7 +47,7 @@ const ARTICLES: Article[] = [
 
 const PAGE_CSS = `
 .noticias-page { overflow-x: hidden; background: #fff; }
-.noticias-page .news-section { position: relative; display: flex; min-height: 1107px; margin-top: -53px; flex-direction: column; align-items: center; overflow: hidden; padding: 45px 20px; }
+.noticias-page .news-section { position: relative; display: flex; min-height: 1107px; margin-top: -85px; flex-direction: column; align-items: center; overflow: hidden; padding: 110px 20px 45px; }
 .noticias-page .news-video { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .noticias-page .news-video video { width: 100%; height: 100%; object-fit: cover; }
 .noticias-page .news-video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)); }

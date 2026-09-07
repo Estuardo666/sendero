@@ -61,7 +61,6 @@ export function HeroSection({ video, titulo, texto, boton }: HeroSectionProps = 
       style={{
         backgroundSize: "cover",
         backgroundPosition: "center center",
-        marginTop: "-100px",
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: HERO_CSS }} />

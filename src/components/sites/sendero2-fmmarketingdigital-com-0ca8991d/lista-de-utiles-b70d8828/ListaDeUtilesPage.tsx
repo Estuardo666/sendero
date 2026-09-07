@@ -18,7 +18,7 @@ const RESOURCES = [
 
 const PAGE_CSS = `
 .lista-page { overflow-x: hidden; background: #fff; }
-.lista-page .resource-hero { position: relative; display: flex; min-height: 313px; margin-top: -53px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 95px 20px 0; }
+.lista-page .resource-hero { position: relative; display: flex; min-height: 313px; margin-top: -85px; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 127px 20px 0; }
 .lista-page .resource-hero > * { position: relative; z-index: 1; }
 .lista-page .resource-video { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .lista-page .resource-video video { width: 100%; height: 100%; object-fit: cover; }
