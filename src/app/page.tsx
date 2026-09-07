@@ -25,9 +25,12 @@ import {
 } from "@/lib/mapeo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo, contenido } = await getInicio();
+  const { seo } = await getInicio();
 
-  return metadataDesde(seo, contenido.heroTitulo ?? "Escuela Sendero");
+  return {
+    ...metadataDesde(seo, "Unidad Educativa Particular Sendero"),
+    title: "Unidad Educativa Particular Sendero",
+  };
 }
 
 export default async function Home() {

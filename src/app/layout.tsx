@@ -3,7 +3,7 @@ import { MagneticButtons } from "@/components/sites/sendero2-fmmarketingdigital-
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Escuela Sendero",
+  title: "Unidad Educativa Particular Sendero",
   description:
     "En la Unidad Educativa SENDERO, potenciamos las habilidades de cada niño y niña con el método Montessori y las Inteligencias Múltiples.",
 };
