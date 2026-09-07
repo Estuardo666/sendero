@@ -211,7 +211,11 @@
   .sendero-root .brx-container { width: 100%; padding-inline: 20px; }
 }
 
-/* Background video wrapper */
+/* Background video wrapper.
+   Bricks paints these at z-index -1, but `.sendero-root` has an opaque white
+   background and neither it nor the section creates a stacking context, so a
+   negative index pushed the video behind that white and it never showed. The
+   wrapper stays at 0 and everything after it in the section is lifted above. */
 .sendero-root .brx-bg-video {
   position: absolute;
   inset: 0;
@@ -219,8 +223,14 @@
   width: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
   background-size: cover;
+}
+.sendero-root .brx-bg-video ~ *:not(.absolute):not(.fixed) {
+  position: relative;
+}
+.sendero-root .brx-bg-video ~ * {
+  z-index: 1;
 }
 .sendero-root .brx-bg-video video {
   position: absolute;
