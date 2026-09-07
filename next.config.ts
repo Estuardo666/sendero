@@ -13,7 +13,6 @@ const wpHost = (() => {
 })();
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   experimental: {
     // WordPress en Local atiende pocas peticiones a la vez: si Next lanza un
     // worker por página, PHP-FPM se satura y el build falla por timeout.
