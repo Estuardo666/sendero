@@ -401,8 +401,8 @@
   pointer-events: none;
 }
 
-/* Shared FAQ/accordion motion. Keeping the panel mounted lets the same
-   transition run in both directions, including the close state. */
+/* Shared FAQ/accordion chrome. The open/close motion itself lives in
+   MotionAccordion (Framer Motion height + fade). */
 .sendero-root .motion-accordion {
   overflow: hidden;
 }
@@ -418,34 +418,17 @@
 }
 
 .sendero-root .motion-accordion__panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition:
-    grid-template-rows 260ms var(--sendero-ease-out),
-    opacity 180ms var(--sendero-ease-out),
-    transform 220ms var(--sendero-ease-out);
+  /* Height is animated by Framer Motion; this only clips the content. */
+  overflow: hidden;
 }
 
 .sendero-root .motion-accordion__panel-inner {
   min-height: 0;
-  overflow: hidden;
-}
-
-.sendero-root .motion-accordion[data-open="true"] .motion-accordion__panel {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .sendero-root .motion-accordion__icon {
   flex: 0 0 auto;
-  transition: transform 220ms var(--sendero-ease-out);
-}
-
-.sendero-root .motion-accordion[data-open="true"] .motion-accordion__icon {
-  transform: rotate(180deg);
+  line-height: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -472,12 +455,6 @@
     transition: opacity 180ms ease-out;
     transform: none;
     will-change: opacity;
-  }
-
-  .sendero-root .motion-accordion__panel,
-  .sendero-root .motion-accordion__icon {
-    transition-duration: 180ms;
-    transform: none;
   }
 
   .sendero-root video[data-lazy-video] {

@@ -159,7 +159,7 @@ export interface WPNoticia {
     destacada: boolean | null;
     enlaceExterno: string | null;
   } | null;
-  categoriasSendero?: {
+  categories?: {
     nodes: { name: string | null; slug: string | null }[];
   } | null;
   seo?: WPSeo | null;

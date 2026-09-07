@@ -122,11 +122,13 @@ const PAGE_CSS = `
 .academic-level-page .academic-level__copy-text { margin-top: 16px; color: #1c2728; font-size: 15px; font-weight: 500; line-height: 1.7; text-align: justify; }
 .academic-level-page .academic-level__copy-text p { margin: 0 0 18px; }
 .academic-level-page .academic-level__copy-text p:last-child { margin-bottom: 0; font-weight: 700; }
-.academic-level-page .academic-level__requirements { margin: 20px 0 24px; border-radius: 16px; background: #f5f5f5; color: #1c2728; }
-.academic-level-page .academic-level__requirements .motion-accordion__trigger { border: 0; background: #ffc107; padding: 8px 20px; color: #1c2728; font: inherit; font-weight: 700; }
-.academic-level-page .academic-level__requirements .motion-accordion__panel-inner { padding: 0 38px 18px; }
-.academic-level-page .academic-level__requirements ol { margin: 0; padding: 0; font-size: 14px; line-height: 1.7; }
-.academic-level-page .academic-level__requirements li { padding-left: 2px; }
+.academic-level-page .academic-level__requirements { margin: 24px 0 28px; overflow: hidden; border-radius: 20px; background: #f5f5f5; color: #1c2728; }
+.academic-level-page .academic-level__requirements .motion-accordion__trigger { border: 0; background: #ffc107; padding: 13px 22px; color: #1c2728; font: inherit; font-size: 15px; font-weight: 700; }
+.academic-level-page .academic-level__requirements .motion-accordion__panel-inner { padding: 22px 26px 26px; }
+.academic-level-page .academic-level__requirements ul { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; font-size: 14.5px; line-height: 1.55; }
+.academic-level-page .academic-level__requirements li { display: flex; align-items: flex-start; gap: 12px; padding: 0; }
+.academic-level-page .academic-level__req-check { display: grid; width: 22px; height: 22px; flex: 0 0 22px; margin-top: 1px; place-items: center; border-radius: 50%; background: ${TEAL}; color: #fff; }
+.academic-level-page .academic-level__req-check svg { width: 12px; height: 12px; fill: currentColor; }
 .academic-level-page .academic-level__rail { position: sticky; top: 90px; width: 55%; height: 666px; overflow: hidden; border-radius: 2em; outline: none; }
 .academic-level-page .academic-level__rail:focus-visible { box-shadow: 0 0 0 4px rgba(0,153,165,.3); }
 .academic-level-page .academic-level__rail-track { display: flex; width: max-content; height: 100%; gap: 5vw; transform: translate3d(var(--rail-shift), 0, 0); transition: transform 780ms cubic-bezier(.23,1,.32,1); will-change: transform; }
@@ -152,6 +154,8 @@ const PAGE_CSS = `
   .academic-level-page .academic-level__copy { width: 100%; flex-basis: auto; text-align: center; }
   .academic-level-page .academic-level__heading { font-size: 36px; }
   .academic-level-page .academic-level__copy-text { text-align: center; }
+  .academic-level-page .academic-level__requirements { text-align: left; }
+  .academic-level-page .academic-level__requirements .motion-accordion__panel-inner { padding: 20px 18px 22px; }
   .academic-level-page .academic-level__rail { position: relative; top: auto; order: -1; width: 100%; height: 300px; margin-bottom: 32px; }
   .academic-level-page .academic-level__rail-track { gap: 16px; }
   .academic-level-page .academic-level__rail-item { width: calc(100vw - 32px); height: 300px; flex-basis: calc(100vw - 32px); }
@@ -195,7 +199,18 @@ export function AcademicLevelPage({
               {data.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <MotionAccordion className="academic-level__requirements" title="Requisitos para matriculación">
-              <ol>{data.requirements.map((item) => <li key={item}>{item}</li>)}</ol>
+              <ul>
+                {data.requirements.map((item) => (
+                  <li key={item}>
+                    <span className="academic-level__req-check" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.55 17.6 4.4 12.45l1.62-1.62 3.53 3.53 8.43-8.43 1.62 1.63z" />
+                      </svg>
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </MotionAccordion>
             <ArrowButton
               href={data.primaryButton?.url || "/admisiones/"}

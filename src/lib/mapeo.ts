@@ -122,7 +122,7 @@ export function rutaNoticia(noticia: WPNoticia): string {
 
 /** Nombre de la seccion (Noticias, Blog u Orgullo Sendero) a la que pertenece. */
 export function categoriaNoticia(noticia: WPNoticia): string | undefined {
-  return noticia.categoriasSendero?.nodes?.[0]?.name ?? undefined;
+  return noticia.categories?.nodes?.[0]?.name ?? undefined;
 }
 
 export function aNoticiasResumen(noticias: WPNoticia[]): NoticiaResumen[] {

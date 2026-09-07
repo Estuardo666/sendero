@@ -80,33 +80,33 @@ const CAMPOS_NOTICIA = `
   date
   featuredImage { ${MEDIA} }
   noticiaCampos { resumen destacada enlaceExterno }
-  categoriasSendero { nodes { name slug } }
+  categories { nodes { name slug } }
 `;
 
 const QUERY_NOTICIAS = `
   query Noticias($cantidad: Int!) {
-    noticias(first: $cantidad, where: { orderby: { field: DATE, order: DESC } }) {
+    posts(first: $cantidad, where: { orderby: { field: DATE, order: DESC } }) {
       nodes { ${CAMPOS_NOTICIA} }
     }
   }
 `;
 
 export async function getNoticias(cantidad = 12): Promise<WPNoticia[]> {
-  const data = await fetchGraphQL<{ noticias: { nodes: WPNoticia[] } }>(
+  const data = await fetchGraphQL<{ posts: { nodes: WPNoticia[] } }>(
     QUERY_NOTICIAS,
     { cantidad },
     REVALIDATE_CORTO,
   );
 
-  return data.noticias.nodes;
+  return data.posts.nodes;
 }
 
 const QUERY_NOTICIAS_CATEGORIA = `
   query NoticiasPorCategoria($categoria: ID!, $cantidad: Int!) {
-    categoriaSendero(id: $categoria, idType: SLUG) {
+    category(id: $categoria, idType: SLUG) {
       name
       slug
-      noticias(first: $cantidad, where: { orderby: { field: DATE, order: DESC } }) {
+      posts(first: $cantidad, where: { orderby: { field: DATE, order: DESC } }) {
         nodes { ${CAMPOS_NOTICIA} }
       }
     }
@@ -114,32 +114,32 @@ const QUERY_NOTICIAS_CATEGORIA = `
 `;
 
 /**
- * Las tres secciones (Noticias, Blog y Orgullo Sendero) son terminos de la
- * misma taxonomia y comparten plantilla, asi que el listado se pide por slug
- * de categoria en lugar de tener una consulta por seccion.
+ * Las tres secciones (Noticias, Blog y Orgullo Sendero) son categorias de
+ * WordPress y comparten plantilla, asi que el listado se pide por slug de
+ * categoria en lugar de tener una consulta por seccion.
  */
 export async function getNoticiasPorCategoria(
   categoria: string,
   cantidad = 24,
 ): Promise<{ nombre: string; noticias: WPNoticia[] } | null> {
   const data = await fetchGraphQL<{
-    categoriaSendero: {
+    category: {
       name: string | null;
-      noticias: { nodes: WPNoticia[] } | null;
+      posts: { nodes: WPNoticia[] } | null;
     } | null;
   }>(QUERY_NOTICIAS_CATEGORIA, { categoria, cantidad }, REVALIDATE_CORTO);
 
-  if (!data.categoriaSendero) return null;
+  if (!data.category) return null;
 
   return {
-    nombre: data.categoriaSendero.name ?? categoria,
-    noticias: data.categoriaSendero.noticias?.nodes ?? [],
+    nombre: data.category.name ?? categoria,
+    noticias: data.category.posts?.nodes ?? [],
   };
 }
 
 const QUERY_NOTICIA = `
   query Noticia($slug: ID!) {
-    noticia(id: $slug, idType: SLUG) {
+    post(id: $slug, idType: SLUG) {
       ${CAMPOS_NOTICIA}
       content
       ${SEO}
@@ -149,13 +149,13 @@ const QUERY_NOTICIA = `
 
 /** Una noticia por su slug, para la ruta de detalle. */
 export async function getNoticia(slug: string): Promise<WPNoticia | null> {
-  const data = await fetchGraphQL<{ noticia: WPNoticia | null }>(
+  const data = await fetchGraphQL<{ post: WPNoticia | null }>(
     QUERY_NOTICIA,
     { slug },
     REVALIDATE_CORTO,
   );
 
-  return data.noticia;
+  return data.post;
 }
 
 /* ---------------- Podcast ---------------- */
