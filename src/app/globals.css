@@ -415,21 +415,49 @@
   gap: 16px;
   cursor: pointer;
   text-align: left;
+  transition:
+    background-color 160ms ease,
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sendero-root .motion-accordion__trigger:active {
+  transform: scale(0.985);
+}
+
+.sendero-root .motion-accordion__trigger:focus-visible {
+  outline: 2px solid #0099a5;
+  outline-offset: -4px;
+}
+
+.sendero-root .motion-accordion__icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(28, 39, 40, 0.12);
+  color: currentColor;
+}
+
+.sendero-root .motion-accordion__icon svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
 }
 
 .sendero-root .motion-accordion__panel {
-  /* Height is animated by Framer Motion; this only clips the content. */
+  /* Height is animated by Framer Motion; this only clips the content.
+     Scroll anchoring would fight that animation and jerk the page. */
   overflow: hidden;
+  overflow-anchor: none;
 }
 
 .sendero-root .motion-accordion__panel-inner {
   min-height: 0;
 }
 
-.sendero-root .motion-accordion__icon {
-  flex: 0 0 auto;
-  line-height: 1;
-}
+
 
 @media (hover: hover) and (pointer: fine) {
   .sendero-root .nb-arrow-button-v2:hover .nb-arrow-button-v2__arrow-wrapper {
@@ -499,16 +527,19 @@
             next_interactive_divider.css
    ============================================================ */
 
-/* Tiles (next_tiles.css) */
+/* Tiles (next_tiles.css). The grid is painted with two repeating gradients and
+   the hover state is two translated squares, so nothing here reflows while a
+   layout animation runs inside the tiles. */
 .sendero-root .next-tiles {
   overflow: hidden;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  --offset: 20px;
   --mouseenter-color: rgba(236, 236, 236, 1);
   --mouseleave-color: rgba(129, 129, 129, 1);
+  --tile-line: rgba(255, 255, 255, 0.49);
+  --tile-size: 40px;
   --duration: 0.2s;
   --easing: ease-in-out;
 }
@@ -523,15 +554,23 @@
 }
 .sendero-root .next-tiles__squares-layout {
   position: absolute;
-  top: calc(-50% - var(--offset));
-  left: calc(-50% - var(--offset));
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--tile-line) 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, var(--tile-line) 0.5px, transparent 0.5px);
+  background-size: var(--tile-size) var(--tile-size);
+  contain: strict;
 }
 .sendero-root .next-tiles__square {
   position: absolute;
-  border: 0.5px solid rgba(255, 255, 255, 0.49);
-  transition: background-color var(--duration) var(--easing);
+  top: 0;
+  left: 0;
+  width: var(--tile-size);
+  height: var(--tile-size);
+  opacity: 0;
+  will-change: translate, opacity;
+  transition: opacity var(--duration) var(--easing);
 }
 .sendero-root .next-tiles__square--mouseleave { background-color: var(--mouseleave-color); }
 .sendero-root .next-tiles__square--mouseenter { background-color: var(--mouseenter-color); }
@@ -633,3 +672,4 @@
     flex-wrap: wrap;
   }
 }
+

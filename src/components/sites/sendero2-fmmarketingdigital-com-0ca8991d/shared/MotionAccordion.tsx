@@ -9,9 +9,11 @@ interface MotionAccordionProps {
   className?: string;
 }
 
-/** Expo-style curve shared by the open/close height, fade and icon rotation. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-const EASE_IN = [0.65, 0, 0.35, 1] as const;
+/** Strong ease-out; entering and exiting both read as responsive with it. */
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+/** Exit runs faster than entry — the system responding, not the user deciding. */
+const OPEN_DURATION = 0.26;
+const CLOSE_DURATION = 0.2;
 
 /**
  * Accessible accordion primitive for requirements/FAQ-like content. Framer
@@ -28,6 +30,7 @@ export function MotionAccordion({ title, children, className = "" }: MotionAccor
       <button
         className="motion-accordion__trigger"
         type="button"
+        data-no-magnetic=""
         aria-controls={panelId}
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
@@ -40,10 +43,12 @@ export function MotionAccordion({ title, children, className = "" }: MotionAccor
           transition={
             reduceMotion
               ? { duration: 0 }
-              : { duration: 0.42, ease: open ? EASE_OUT : EASE_IN }
+              : { duration: open ? OPEN_DURATION : CLOSE_DURATION, ease: EASE_OUT }
           }
         >
-          ⌄
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15.4 5.6 9l1.4-1.4 5 5 5-5L18.4 9z" />
+          </svg>
         </motion.span>
       </button>
       <AnimatePresence initial={false}>
@@ -60,16 +65,16 @@ export function MotionAccordion({ title, children, className = "" }: MotionAccor
               transition: reduceMotion
                 ? { duration: 0 }
                 : {
-                    height: { duration: 0.38, ease: EASE_IN },
-                    opacity: { duration: 0.2, ease: "linear" },
+                    height: { duration: CLOSE_DURATION, ease: EASE_OUT },
+                    opacity: { duration: 0.12, ease: "linear" },
                   },
             }}
             transition={
               reduceMotion
                 ? { duration: 0 }
                 : {
-                    height: { duration: 0.46, ease: EASE_OUT },
-                    opacity: { duration: 0.28, ease: "linear" },
+                    height: { duration: OPEN_DURATION, ease: EASE_OUT },
+                    opacity: { duration: 0.16, ease: "linear" },
                   }
             }
           >

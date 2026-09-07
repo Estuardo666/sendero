@@ -31,7 +31,6 @@ export interface NoticiaPageProps {
 const PAGE_CSS = `
 .noticia-page { overflow-x: hidden; background: #fff; }
 .noticia-page .noticia-tiles { width: 100%; border: 1px solid rgba(229,229,229,1); border-radius: 0 0 0 16px; }
-.noticia-page .noticia-tiles .next-tiles__square { border: 0.5px solid rgba(229,229,229,.49); }
 .noticia-page .noticia-tiles .next-tiles__content { align-items: flex-start; }
 .noticia-page .noticia-hero { padding-bottom: 2em; }
 .noticia-page .noticia-body { padding-top: 30px; }
@@ -100,6 +99,7 @@ export function NoticiaPage({
           squareSize={40}
           enterColor="rgba(255, 193, 7, 0.55)"
           leaveColor="rgba(86, 152, 164, 0.53)"
+          lineColor="rgba(229, 229, 229, 0.75)"
           className="noticia-tiles"
         >
           <header className="noticia-wrap noticia-hero">

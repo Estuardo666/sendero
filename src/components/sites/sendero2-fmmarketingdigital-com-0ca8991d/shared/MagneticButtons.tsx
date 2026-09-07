@@ -7,7 +7,12 @@ const SELECTOR = [
   "button",
   ".bricks-button",
   '[role="button"]',
-].join(", ");
+]
+  .map((base) => `${base}:not([data-no-magnetic])`)
+  .join(", ");
+
+/** Full-width bars drift under the pointer instead of feeling pressable. */
+const MAX_WIDTH = 320;
 
 /** Pointer distance (px) at which a control starts reacting. */
 const RADIUS = 90;
@@ -59,6 +64,8 @@ export function MagneticButtons() {
       const hovered = (event.target as Element | null)?.closest?.(SELECTOR) as
         | HTMLElement
         | null;
+
+      if (hovered && hovered.offsetWidth > MAX_WIDTH) return;
 
       if (hovered && hovered !== active) {
         if (active) active.style.removeProperty("translate");

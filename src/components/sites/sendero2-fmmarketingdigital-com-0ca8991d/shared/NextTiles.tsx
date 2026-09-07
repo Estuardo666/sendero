@@ -11,6 +11,8 @@ interface NextTilesProps {
   enterColor?: string;
   /** --mouseleave-color */
   leaveColor?: string;
+  /** Grid line colour (source draws a 0.5px border per square). */
+  lineColor?: string;
   className?: string;
   style?: React.CSSProperties;
   id?: string;
@@ -19,87 +21,107 @@ interface NextTilesProps {
 /**
  * Port of the NextBricks "Tiles" element (next_tiles.min.js + next_tiles.css).
  *
- * Builds a grid of `squareSize` squares covering 2x the container box, offset by
- * `calc(-50% - 20px)`, and lights the square under the pointer with
- * --mouseenter-color; the square just left keeps --mouseleave-color for 100ms.
- * Transition is `background-color 0.2s ease-in-out` (from the plugin stylesheet).
+ * The source builds one <div> per square — thousands of nodes that it rebuilds
+ * on every resize, which stalls any layout animation running inside the tiles
+ * (the requirements accordion, for one). We draw the same grid with two
+ * repeating gradients and move a single highlight square with `translate`, so
+ * pointer tracking never touches layout and resizing costs nothing. A second
+ * square trails the pointer with --mouseleave-color for 100ms, matching the
+ * plugin's `background-color 0.2s ease-in-out` fade.
  */
 export function NextTiles({
   children,
   squareSize = 40,
   enterColor = "rgba(255, 193, 7, 0.55)",
   leaveColor = "rgba(86, 152, 164, 0.53)",
+  lineColor = "rgba(255, 255, 255, 0.49)",
   className,
   style,
   id,
 }: NextTilesProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const layerRef = useRef<HTMLDivElement>(null);
+  const enterRef = useRef<HTMLDivElement>(null);
+  const leaveRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
-    const layer = layerRef.current;
-    if (!root || !layer) return;
+    const enter = enterRef.current;
+    const leave = leaveRef.current;
+    if (!root || !enter || !leave) return;
 
-    const build = () => {
-      const rect = root.getBoundingClientRect();
-      const cols = Math.ceil((rect.width * 2) / squareSize);
-      const rows = Math.ceil((rect.height * 2) / squareSize);
-      layer.replaceChildren();
-      const frag = document.createDocumentFragment();
-      for (let i = 0; i < rows; i += 1) {
-        for (let j = 0; j < cols; j += 1) {
-          const square = document.createElement("div");
-          square.className = "next-tiles__square";
-          square.style.width = `${squareSize}px`;
-          square.style.height = `${squareSize}px`;
-          square.style.left = `${j * squareSize}px`;
-          square.style.top = `${i * squareSize}px`;
-          frag.appendChild(square);
-        }
+    let cellX = Number.NaN;
+    let cellY = Number.NaN;
+    let trailTimer = 0;
+    /* Cached so pointermove never forces a synchronous layout after the
+       previous move wrote a translate; re-read only once after a scroll,
+       resize or reflow marks it stale. */
+    let rect = root.getBoundingClientRect();
+    let stale = false;
+    const invalidate = () => {
+      stale = true;
+    };
+
+    const place = (element: HTMLElement, x: number, y: number) => {
+      element.style.translate = `${x * squareSize}px ${y * squareSize}px`;
+    };
+
+    const hide = () => {
+      enter.style.opacity = "0";
+      cellX = Number.NaN;
+      cellY = Number.NaN;
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (stale) {
+        rect = root.getBoundingClientRect();
+        stale = false;
       }
-      layer.appendChild(frag);
+      const x = Math.floor((event.clientX - rect.left) / squareSize);
+      const y = Math.floor((event.clientY - rect.top) / squareSize);
+      if (x === cellX && y === cellY) return;
+
+      if (!Number.isNaN(cellX)) {
+        place(leave, cellX, cellY);
+        leave.style.opacity = "1";
+        window.clearTimeout(trailTimer);
+        trailTimer = window.setTimeout(() => {
+          leave.style.opacity = "0";
+        }, 100);
+      }
+
+      cellX = x;
+      cellY = y;
+      place(enter, x, y);
+      enter.style.opacity = "1";
     };
 
-    build();
-    const observer = new ResizeObserver(build);
-    observer.observe(root);
-
-    let current: Element | null = null;
-    const leave = (square: Element | null) => {
-      if (!square) return;
-      square.classList.remove("next-tiles__square--mouseenter");
-      square.classList.add("next-tiles__square--mouseleave");
-      window.setTimeout(
-        () => square.classList.remove("next-tiles__square--mouseleave"),
-        100,
-      );
-    };
-
-    const onMove = (event: MouseEvent) => {
-      const square = document
-        .elementsFromPoint(event.clientX, event.clientY)
-        .find(
-          (el) =>
-            el.classList.contains("next-tiles__square") &&
-            el.closest(".next-tiles") === root,
-        );
-      if (square === current) return;
-      leave(current);
-      if (square) square.classList.add("next-tiles__square--mouseenter");
-      current = square ?? null;
-    };
     const onLeave = () => {
-      leave(current);
-      current = null;
+      if (!Number.isNaN(cellX)) {
+        place(leave, cellX, cellY);
+        leave.style.opacity = "1";
+        window.clearTimeout(trailTimer);
+        trailTimer = window.setTimeout(() => {
+          leave.style.opacity = "0";
+        }, 100);
+      }
+      hide();
     };
 
-    root.addEventListener("mousemove", onMove);
-    root.addEventListener("mouseleave", onLeave);
+    const observer = new ResizeObserver(invalidate);
+    observer.observe(root);
+    root.addEventListener("pointerenter", invalidate);
+    root.addEventListener("pointermove", onMove, { passive: true });
+    root.addEventListener("pointerleave", onLeave);
+    window.addEventListener("scroll", invalidate, { passive: true });
+    window.addEventListener("resize", invalidate);
     return () => {
+      window.clearTimeout(trailTimer);
       observer.disconnect();
-      root.removeEventListener("mousemove", onMove);
-      root.removeEventListener("mouseleave", onLeave);
+      root.removeEventListener("pointerenter", invalidate);
+      root.removeEventListener("pointermove", onMove);
+      root.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("scroll", invalidate);
+      window.removeEventListener("resize", invalidate);
     };
   }, [squareSize]);
 
@@ -112,11 +134,22 @@ export function NextTiles({
         {
           "--mouseenter-color": enterColor,
           "--mouseleave-color": leaveColor,
+          "--tile-line": lineColor,
+          "--tile-size": `${squareSize}px`,
           ...style,
         } as React.CSSProperties
       }
     >
-      <div ref={layerRef} className="next-tiles__squares-layout" aria-hidden />
+      <div className="next-tiles__squares-layout" aria-hidden>
+        <div
+          ref={leaveRef}
+          className="next-tiles__square next-tiles__square--mouseleave"
+        />
+        <div
+          ref={enterRef}
+          className="next-tiles__square next-tiles__square--mouseenter"
+        />
+      </div>
       <div className="next-tiles__content">{children}</div>
     </div>
   );

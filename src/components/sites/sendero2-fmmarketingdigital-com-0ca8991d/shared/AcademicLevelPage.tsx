@@ -114,7 +114,6 @@ const PAGE_CSS = `
 .academic-level-page .academic-level__title { margin: 0; padding: 10px; color: ${TEAL}; font-size: clamp(54px, 5.1vw, 75px); font-weight: 800; line-height: 1.05; letter-spacing: -2px; text-align: center; text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1.5px 1.5px #fff, -1.5px -1.5px #fff, 1.5px -1.5px #fff, -1.5px 1.5px #fff, 6px 0 #fdb92e, -6px 0 #fdb92e, 0 6px #fdb92e, 0 -6px #fdb92e, 4px 4px #fdb92e, -4px -4px #fdb92e, 4px -4px #fdb92e, -4px 4px #fdb92e; }
 .academic-level-page .academic-level__down { display: grid; width: 40px; height: 40px; margin-top: 42px; place-items: center; border-radius: 50%; background: #f5f5f5; color: ${TEAL}; font-size: 26px; }
 .academic-level-page .academic-level__tiles { width: 100%; overflow: clip; border: 1px solid #fff; border-radius: 0 0 0 16px; }
-.academic-level-page .academic-level__tiles .next-tiles__square { border: 0.5px solid rgba(255,255,255,.49); }
 .academic-level-page .academic-level__story { display: flex; width: min(1260px, 100%); min-height: 923px; align-items: center; gap: 20px; margin: 0 auto; padding: 0 0 66px; }
 .academic-level-page .academic-level__copy { width: 45%; flex: 0 0 45%; align-self: center; }
 .academic-level-page .academic-level__label { margin: 0 0 20px; background: #ebebeb; color: ${TEAL}; }
@@ -123,7 +122,13 @@ const PAGE_CSS = `
 .academic-level-page .academic-level__copy-text p { margin: 0 0 18px; }
 .academic-level-page .academic-level__copy-text p:last-child { margin-bottom: 0; font-weight: 700; }
 .academic-level-page .academic-level__requirements { margin: 24px 0 28px; overflow: hidden; border-radius: 20px; background: #f5f5f5; color: #1c2728; }
-.academic-level-page .academic-level__requirements .motion-accordion__trigger { border: 0; background: #ffc107; padding: 13px 22px; color: #1c2728; font: inherit; font-size: 15px; font-weight: 700; }
+.academic-level-page .academic-level__requirements .motion-accordion__trigger { border: 0; background: #ffc107; padding: 14px 20px 14px 22px; color: #1c2728; font: inherit; font-size: 15px; font-weight: 700; letter-spacing: -0.1px; }
+.academic-level-page .academic-level__requirements .motion-accordion__icon { background: rgba(28,39,40,.13); }
+.academic-level-page .academic-level__requirements[data-open="true"] .motion-accordion__trigger { box-shadow: inset 0 -1px 0 rgba(28,39,40,.12); }
+@media (hover: hover) and (pointer: fine) {
+  .academic-level-page .academic-level__requirements .motion-accordion__trigger:hover { background: #ffcb2e; }
+  .academic-level-page .academic-level__requirements .motion-accordion__trigger:hover .motion-accordion__icon { background: rgba(28,39,40,.2); }
+}
 .academic-level-page .academic-level__requirements .motion-accordion__panel-inner { padding: 22px 26px 26px; }
 .academic-level-page .academic-level__requirements ul { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; font-size: 14.5px; line-height: 1.55; }
 .academic-level-page .academic-level__requirements li { display: flex; align-items: flex-start; gap: 12px; padding: 0; }
@@ -189,6 +194,7 @@ export function AcademicLevelPage({
           squareSize={40}
           enterColor="rgba(255, 193, 7, 0.55)"
           leaveColor="rgba(86, 152, 164, 0.53)"
+          lineColor="rgba(255, 255, 255, 0.55)"
           className="academic-level__tiles"
         >
           <section className="academic-level__story">
