@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MagneticButtons } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/MagneticButtons";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="es" className="h-full antialiased">
       <head></head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <MagneticButtons />
+      </body>
     </html>
   );
 }

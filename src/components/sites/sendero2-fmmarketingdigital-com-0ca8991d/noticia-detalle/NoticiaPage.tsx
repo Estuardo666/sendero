@@ -1,5 +1,6 @@
 import { BlurReveal } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/BlurReveal";
 import { LetterLauncher } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/LetterLauncher";
+import { NextTiles } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/NextTiles";
 import { SiteFooter } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/SiteFooter";
 import { SiteHeader } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/SiteHeader";
 import { WhatsAppWidget } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/shared/WhatsAppWidget";
@@ -29,6 +30,11 @@ export interface NoticiaPageProps {
 
 const PAGE_CSS = `
 .noticia-page { overflow-x: hidden; background: #fff; }
+.noticia-page .noticia-tiles { width: 100%; border: 1px solid rgba(229,229,229,1); border-radius: 0 0 0 16px; }
+.noticia-page .noticia-tiles .next-tiles__square { border: 0.5px solid rgba(229,229,229,.49); }
+.noticia-page .noticia-tiles .next-tiles__content { align-items: flex-start; }
+.noticia-page .noticia-hero { padding-bottom: 2em; }
+.noticia-page .noticia-body { padding-top: 30px; }
 .noticia-page .noticia-wrap { width: min(693px, calc(100% - 40px)); margin-inline: auto; padding-top: 135px; }
 .noticia-page .noticia-media { overflow: hidden; border-radius: 30px; }
 .noticia-page .noticia-media img { display: block; width: 100%; aspect-ratio: 693 / 555; object-fit: cover; }
@@ -90,32 +96,41 @@ export function NoticiaPage({
       <style dangerouslySetInnerHTML={{ __html: PAGE_CSS }} />
       <SiteHeader {...chrome.header} />
       <main className="flex-1">
-        <article className="noticia-wrap">
-          {imagen ? (
-            <div className="noticia-media">
-              <img src={imagen} alt={imagenAlt ?? ""} />
-            </div>
-          ) : null}
-
-          <div className="noticia-meta">
-            <BlurReveal as="span" className="noticia-cat">
-              {categoria}
-            </BlurReveal>
-            {fecha ? (
-              <BlurReveal as="span" className="noticia-fecha">
-                {fecha}
-              </BlurReveal>
+        <NextTiles
+          squareSize={40}
+          enterColor="rgba(255, 193, 7, 0.55)"
+          leaveColor="rgba(86, 152, 164, 0.53)"
+          className="noticia-tiles"
+        >
+          <header className="noticia-wrap noticia-hero">
+            {imagen ? (
+              <div className="noticia-media">
+                <img src={imagen} alt={imagenAlt ?? ""} />
+              </div>
             ) : null}
-          </div>
 
-          <LetterLauncher as="h1" className="noticia-titulo">
-            {titulo}
-          </LetterLauncher>
+            <div className="noticia-meta">
+              <BlurReveal as="span" className="noticia-cat">
+                {categoria}
+              </BlurReveal>
+              {fecha ? (
+                <BlurReveal as="span" className="noticia-fecha">
+                  {fecha}
+                </BlurReveal>
+              ) : null}
+            </div>
 
-          {tiempoLectura ? (
-            <p className="noticia-lectura">{tiempoLectura}</p>
-          ) : null}
+            <LetterLauncher as="h1" className="noticia-titulo">
+              {titulo}
+            </LetterLauncher>
 
+            {tiempoLectura ? (
+              <p className="noticia-lectura">{tiempoLectura}</p>
+            ) : null}
+          </header>
+        </NextTiles>
+
+        <article className="noticia-wrap noticia-body">
           <div
             className="noticia-cuerpo"
             dangerouslySetInnerHTML={{ __html: cuerpo }}

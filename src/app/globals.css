@@ -594,6 +594,8 @@
 
 /* Interactive divider (next_interactive_divider.css) */
 .sendero-root .next-interactive-divider {
+  /* Keep the 500px hover hit box from painting over later siblings. */
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

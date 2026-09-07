@@ -101,7 +101,7 @@ const CONTACTO_CSS = `
   flex: none;
 }
 
-#brxe-igdbhn, #brxe-mbtgqi { width: 66%; }
+#brxe-igdbhn, #brxe-mbtgqi { width: 66%; isolation: isolate; z-index: 0; }
 #brxe-mbtgqi { margin-block: 10px; }
 
 .sendero-root .brxe-izzxjz, .sendero-root .brxe-jrikfd {
@@ -144,26 +144,53 @@ const CONTACTO_CSS = `
   list-style: none;
   margin: 0;
   padding: 0;
+  /* Above the interactive dividers, whose hover hit box grows to 500px tall. */
+  position: relative;
+  z-index: 3;
 }
 #brxe-fmarrc li {
-  background: #0099a5;
-  border-radius: 31px;
-  margin-bottom: 26px;
+  display: flex;
   width: 40px;
-  height: 39px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 26px;
+  border-radius: 50%;
+  background: #0099a5;
 }
 #brxe-fmarrc a {
   display: flex;
+  width: 100%;
+  height: 100%;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  padding-block: 6px;
+  padding: 0;
+  border-radius: 50%;
   color: #ffffff;
+  transition: background-color 220ms ease;
 }
+#brxe-fmarrc a:hover { background: #007c86; }
 #brxe-fmarrc a svg {
+  display: block;
+  width: 16px;
   height: 16px;
-  width: auto;
   fill: currentColor;
+}
+
+/* Map: keyless Google embed tinted to the Sendero teal/amber palette. */
+#brxe-yxukjo { position: relative; overflow: hidden; }
+#brxe-yxukjo iframe {
+  display: block;
+  filter: grayscale(1) contrast(0.92) brightness(1.06) sepia(1)
+    hue-rotate(140deg) saturate(2.6);
+}
+#brxe-yxukjo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 153, 165, 0.18), rgba(255, 193, 7, 0.12));
+  mix-blend-mode: multiply;
 }
 
 /* ---------- MOBILE — the only breakpoint on the site ---------- */
