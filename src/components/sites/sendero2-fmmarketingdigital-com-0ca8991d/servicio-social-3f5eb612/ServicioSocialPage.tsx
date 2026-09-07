@@ -46,6 +46,16 @@ const PAGE_CSS = `
 .social-page .editor-tools span { font-weight: 700; }
 .social-page .form-submit { width: 100%; border: 0; border-radius: 100px; background: #ffc107; padding: 11px; color: #1c2728; cursor: pointer; font: inherit; font-size: 14px; font-weight: 700; transition: transform 140ms cubic-bezier(0.23,1,0.32,1), background-color 160ms ease-out, box-shadow 220ms cubic-bezier(0.23,1,0.32,1); }
 .social-page .form-status { min-height: 20px; margin: 10px 0 0; color: #007580; font-size: 12px; opacity: 0; transform: translateY(-4px); transition: opacity 180ms ease-out, transform 220ms cubic-bezier(0.23,1,0.32,1); }
+.social-page .form-submit[disabled] { cursor: progress; opacity: .65; }
+.social-page .form-status { min-height: 20px; }
+.social-page .form-status[data-tone="error"] { color: #d44b33; }
+.social-page .field-group { display: block; margin: 0 0 15px; border: 0; padding: 0; color: #363636; font-size: 13px; font-weight: 600; }
+.social-page .field-group legend { padding: 0; }
+.social-page .field-group legend span { color: #d44b33; }
+.social-page .level-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px 10px; margin-top: 8px; border: 1px solid #ddd; border-radius: 5px; background: #fff; padding: 10px; }
+.social-page .level-option { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; line-height: 1.2; }
+.social-page .level-option input { display: inline-block; width: 15px; height: 15px; margin: 0; flex: none; accent-color: #0099a5; }
+@media (max-width: 767px) { .social-page .level-list { grid-template-columns: 1fr; } }
 .social-page .form-status[data-visible="true"] { opacity: 1; transform: translateY(0); }
 .social-page .announcement-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 .social-page .announcement-card { display: flex; width: calc(25% - 11px); min-height: 165px; flex-direction: column; border-radius: 24px; background: #f5f5f5; padding: 10px 13px 0; color: #1c2728; transition: transform 220ms cubic-bezier(0.23,1,0.32,1), box-shadow 220ms cubic-bezier(0.23,1,0.32,1); }
@@ -109,6 +119,8 @@ export function ServicioSocialPage({
   anuncios,
 }: ServicioSocialPageProps) {
   const [status, setStatus] = useState("");
+  const [error, setError] = useState(false);
+  const [enviando, setEnviando] = useState(false);
 
   const tipos = opcionesTipo?.length
     ? opcionesTipo
@@ -127,10 +139,65 @@ export function ServicioSocialPage({
         whatsapp: `https://api.whatsapp.com/send?phone=593${anuncio.phone}`,
       }));
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus(formConfirmacion ?? "Tu anuncio está listo para revisión.");
-    event.currentTarget.reset();
+
+    const form = event.currentTarget;
+    const datos = new FormData(form);
+    const niveles = datos.getAll("level").map(String);
+
+    if (niveles.length === 0) {
+      setError(true);
+      setStatus("Marca al menos un nivel académico.");
+      return;
+    }
+
+    setEnviando(true);
+    setError(false);
+    setStatus("Enviando tu anuncio…");
+
+    // El desplegable guarda la etiqueta que escribió el colegio; el backend
+    // solo entiende "ofrece" o "solicita".
+    const etiquetaTipo = String(datos.get("type") ?? "");
+    const tipo = /solicit/i.test(etiquetaTipo) ? "solicita" : "ofrece";
+
+    try {
+      const respuesta = await fetch("/api/servicio-social", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo,
+          titulo: datos.get("profession"),
+          niveles,
+          descripcion: datos.get("description"),
+          telefono: datos.get("phone"),
+          email: datos.get("email"),
+          website: datos.get("website"),
+        }),
+      });
+
+      if (!respuesta.ok) {
+        const detalle = (await respuesta.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+
+        setError(true);
+        setStatus(
+          detalle?.message ??
+            "No se pudo enviar el anuncio. Inténtalo de nuevo en un momento.",
+        );
+        return;
+      }
+
+      setError(false);
+      setStatus(formConfirmacion ?? "Tu anuncio está listo para revisión.");
+      form.reset();
+    } catch {
+      setError(true);
+      setStatus("No hay conexión con el servidor. Inténtalo de nuevo.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -165,18 +232,43 @@ export function ServicioSocialPage({
                 ))}
               </select></label>
             <label>Área o Asignatura <span>*</span><input name="profession" placeholder="Ej. Tutoría de Matemáticas, Refuerzo de Lectoescritura" required /></label>
-            <label>Nivel académico <span>*</span><select name="level" defaultValue={niveles[0]} required>
+            <fieldset className="field-group">
+              <legend>
+                Nivel académico <span>*</span>
+              </legend>
+              <div className="level-list">
                 {niveles.map((nivel) => (
-                  <option key={nivel}>{nivel}</option>
+                  <label className="level-option" key={nivel}>
+                    <input type="checkbox" name="level" value={nivel} />
+                    {nivel}
+                  </label>
                 ))}
-              </select></label>
+              </div>
+            </fieldset>
             <label>Descripción <span>*</span><div className="editor-tools" aria-hidden="true"><span>Párrafo</span><span>B</span><span>I</span><span>↗</span><span>☷</span></div><textarea name="description" placeholder="Describe la asesoría o refuerzo académico que ofreces o necesitas" required /></label>
             <label>Número de Contacto <span>*</span><input name="phone" type="tel" required /></label>
             <label>Email <span>*</span><input name="email" type="email" placeholder="Email Address" required /></label>
-            <button className="form-submit" type="submit">
-              {formBoton ?? "Enviar anuncio académico"}
+            <label className="sr-only" aria-hidden="true">
+              No rellenar
+              <input
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                defaultValue=""
+              />
+            </label>
+            <button className="form-submit" type="submit" disabled={enviando}>
+              {enviando ? "Enviando…" : (formBoton ?? "Enviar anuncio académico")}
             </button>
-            <p className="form-status" data-visible={status ? "true" : "false"} aria-live="polite">{status}</p>
+            <p
+              className="form-status"
+              data-visible={status ? "true" : "false"}
+              data-tone={error ? "error" : "ok"}
+              role="status"
+              aria-live="polite"
+            >
+              {status}
+            </p>
           </form>
           <div className="announcement-grid">
             {items.map((anuncio) => (

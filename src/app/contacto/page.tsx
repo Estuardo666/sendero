@@ -34,7 +34,12 @@ export default async function ContactoPage() {
           antetitulo={texto(contenido.antetitulo)}
           titulo={texto(contenido.titulo)}
           telefono={texto(globales.telefonoPrincipal)}
-          email={texto(globales.email)}
+          correos={(globales.correos ?? [])
+            .filter((correo) => correo.email)
+            .map((correo) => ({
+              email: correo.email ?? "",
+              etiqueta: texto(correo.etiqueta),
+            }))}
           tituloDirectorio={texto(contenido.tituloDirectorio)}
           directorio={(contenido.directorio ?? []).map((entrada) => ({
             area: entrada.area ?? "",

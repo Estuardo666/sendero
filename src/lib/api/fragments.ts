@@ -6,6 +6,9 @@ export const BOTON = `etiqueta url`;
 
 export const ENLACE = `etiqueta url externo`;
 
+/** Enlace del encabezado, con su segundo nivel desplegable. */
+export const ENLACE_CON_SUBMENU = `${ENLACE} submenu { ${ENLACE} }`;
+
 export const SEO = `seo { tituloSeo descripcionSeo imagenOg { ${MEDIA} } }`;
 
 export const FOTO = `imagen { ${MEDIA} } descripcion`;

@@ -28,6 +28,8 @@ function enlaces(lista: WPEnlace[] | null | undefined): Enlace[] | undefined {
       etiqueta: item.etiqueta ?? "",
       url: item.url ?? "",
       externo: item.externo ?? false,
+      // El segundo nivel es el último: los hijos ya no llevan submenú.
+      hijos: enlaces(item.submenu),
     }));
 }
 

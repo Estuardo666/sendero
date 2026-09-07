@@ -1,10 +1,16 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { conIds, type Enlace, type Imagen } from "../shared/content";
+import {
+  Chevron,
+  SubmenuEscritorio,
+  SubmenuMovil,
+  useAperturaConRetraso,
+} from "./NavSubmenu";
 
 const LOGO_SRC =
   "/sites/sendero2-fmmarketingdigital-com-0ca8991d/root-8a5edab2/images/Recurso-21@2x.png";
@@ -301,6 +307,118 @@ const HEADER_CSS = `
 }
 
 /* ==================================================================
+   SEGUNDO NIVEL (añadido: el original no tenía desplegables)
+   ================================================================== */
+.sendero-sub-chevron {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sendero-sub-chevron[data-abierto] {
+  transform: rotate(180deg);
+}
+
+/* --- escritorio: panel flotante en un portal a body --- */
+.sendero-submenu {
+  position: fixed;
+  z-index: 200;
+  display: flex;
+  min-width: 216px;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border: 1px solid #0099a5;
+  border-radius: 16px;
+  background: rgba(0, 153, 165, 0.97);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transform-origin: top left;
+}
+.sendero-submenu a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.9em;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease-out;
+}
+.sendero-submenu a:hover,
+.sendero-submenu a:focus-visible {
+  background: #00707a;
+}
+
+/* --- escritorio: el disparador lleva el texto y la flecha en una fila --- */
+.nb-gooey-nav__item .sendero-sub-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nb-gooey-nav__item .sendero-sub-trigger button {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  line-height: 0;
+}
+
+/* --- móvil: acordeón dentro del panel lateral --- */
+#brxe-hfdzvx .sendero-has-sub {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+#brxe-hfdzvx .sendero-has-sub button {
+  display: flex;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  line-height: 0;
+}
+#brxe-hfdzvx .sendero-has-sub .sendero-sub-chevron {
+  width: 26px;
+  height: 26px;
+}
+.sendero-sub-movil li {
+  padding: 2px 0 2px 18px;
+}
+.sendero-sub-movil {
+  display: grid;
+}
+.sendero-sub-movil > ul {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+.sendero-sub-movil li {
+  padding: 4px 0 4px 16px;
+}
+.sendero-sub-movil a {
+  /* Tamano propio: hereda de un h3 muy grande y quedaria desproporcionado. */
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-decoration: none;
+  opacity: 0.9;
+}
+.sendero-sub-movil a:hover,
+.sendero-sub-movil a:focus-visible {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* ==================================================================
    OFFCANVAS MENU (bc_offcanvas_menu.css)
    ================================================================== */
 .bc-offcanvas-menu {
@@ -556,7 +674,7 @@ const HEADER_CSS = `
 }
 `;
 
-type SwapLink = { id: string; label: string; href: string };
+type SwapLink = { id: string; label: string; href: string; hijos?: Enlace[] };
 
 const OFFCANVAS_LINKS: SwapLink[] = [
   { id: "brxe-swwnnk", label: "Quienes somos", href: "/quienes-somos" },
@@ -571,6 +689,8 @@ const OFFCANVAS_LINKS: SwapLink[] = [
 type GooeyItem = {
   itemId: string;
   headingId: string;
+  /** Segundo nivel. Solo lo usan los menús del encabezado. */
+  hijos?: Enlace[];
   label: string;
   href: string;
   external?: boolean;
@@ -635,20 +755,88 @@ function GooeyFilterDefs() {
 function GooeyItems({ items, onNavigate }: { items: GooeyItem[]; onNavigate?: () => void }) {
   return (
     <>
-      {items.map((item) => (
-        <div key={item.itemId} id={item.itemId} className="brxe-block nb-gooey-nav__item">
-          <span id={item.headingId} className="brxe-heading">
-            <a
-              href={item.href}
-              onClick={onNavigate}
-              {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
-            >
-              {item.label}
-            </a>
-          </span>
-        </div>
-      ))}
+      {items.map((item) =>
+        item.hijos?.length ? (
+          <GooeyItemConSubmenu key={item.itemId} item={item} onNavigate={onNavigate} />
+        ) : (
+          <div key={item.itemId} id={item.itemId} className="brxe-block nb-gooey-nav__item">
+            <span id={item.headingId} className="brxe-heading">
+              <a
+                href={item.href}
+                onClick={onNavigate}
+                {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+              >
+                {item.label}
+              </a>
+            </span>
+          </div>
+        ),
+      )}
     </>
+  );
+}
+
+/**
+ * Elemento del menú de escritorio que despliega su segundo nivel. Se abre al
+ * pasar el puntero y también con el teclado, desde la flecha.
+ */
+function GooeyItemConSubmenu({
+  item,
+  onNavigate,
+}: {
+  item: GooeyItem;
+  onNavigate?: () => void;
+}) {
+  const anclaRef = useRef<HTMLDivElement | null>(null);
+  const { abierto, abrir, cerrarPronto, cerrarYa, alternar } = useAperturaConRetraso();
+  const idPanel = `${item.itemId}-submenu`;
+
+  return (
+    <div
+      ref={anclaRef}
+      id={item.itemId}
+      className="brxe-block nb-gooey-nav__item"
+      onMouseEnter={abrir}
+      onMouseLeave={cerrarPronto}
+      onFocus={abrir}
+      onBlur={(evento) => {
+        if (!evento.currentTarget.contains(evento.relatedTarget as Node)) {
+          cerrarPronto();
+        }
+      }}
+    >
+      <span id={item.headingId} className="brxe-heading sendero-sub-trigger">
+        <a
+          href={item.href}
+          onClick={onNavigate}
+          {...(item.external ? { target: "_blank", rel: "noreferrer" } : {})}
+        >
+          {item.label}
+        </a>
+        <button
+          type="button"
+          aria-expanded={abierto}
+          aria-controls={idPanel}
+          aria-label={`Ver secciones de ${item.label}`}
+          onClick={alternar}
+        >
+          <Chevron abierto={abierto} />
+        </button>
+      </span>
+
+      <SubmenuEscritorio
+        anclaRef={anclaRef}
+        hijos={item.hijos ?? []}
+        abierto={abierto}
+        idPanel={idPanel}
+        onCerrar={() => {
+          cerrarYa();
+          onNavigate?.();
+        }}
+        onEntrar={abrir}
+        onSalir={cerrarPronto}
+      />
+    </div>
   );
 }
 
@@ -683,6 +871,80 @@ function Burger({
         </svg>
       </button>
     </div>
+  );
+}
+
+/**
+ * Enlace del menú móvil. Si trae segundo nivel, el texto sigue navegando y la
+ * flecha despliega los hijos empujando al resto de la lista.
+ *
+ * Se mantiene como <h3> hermano del acordeón porque el CSS original escalona
+ * la entrada de los enlaces con `nth-of-type`.
+ */
+function EnlaceMovil({
+  link,
+  onNavigate,
+  panelAbierto,
+}: {
+  link: SwapLink;
+  onNavigate: () => void;
+  panelAbierto: boolean;
+}) {
+  const [abierto, setAbierto] = useState(false);
+  const [panelPrevio, setPanelPrevio] = useState(panelAbierto);
+  const hijos = link.hijos ?? [];
+  const idPanel = `${link.id}-submenu`;
+
+  // Al cerrarse el panel lateral, el acordeón vuelve a su sitio.
+  if (panelPrevio !== panelAbierto) {
+    setPanelPrevio(panelAbierto);
+    if (!panelAbierto) setAbierto(false);
+  }
+
+  return (
+    <>
+      <h3
+        id={link.id}
+        className={cn(
+          "brxe-swap-hover bc-swap-title",
+          hijos.length && "sendero-has-sub",
+        )}
+        data-type="line"
+        data-stagger="0.25"
+      >
+        <a className="bc-swap-title__anchor" href={link.href || undefined} onClick={onNavigate}>
+          <span className="bc-swap-title__span-wrapper">
+            <span
+              className="bc-swap-title__span"
+              style={{ "--after-content": `"${link.label}"` } as CSSProperties}
+            >
+              {link.label}
+            </span>
+          </span>
+        </a>
+
+        {hijos.length ? (
+          <button
+            type="button"
+            aria-expanded={abierto}
+            aria-controls={idPanel}
+            aria-label={`Ver secciones de ${link.label}`}
+            onClick={() => setAbierto((valor) => !valor)}
+          >
+            <Chevron abierto={abierto} />
+          </button>
+        ) : null}
+      </h3>
+
+      {hijos.length ? (
+        <SubmenuMovil
+          hijos={hijos}
+          abierto={abierto}
+          idPanel={idPanel}
+          onNavegar={onNavigate}
+        />
+      ) : null}
+    </>
   );
 }
 
@@ -754,32 +1016,13 @@ export function SiteHeader({
               <Burger id="brxe-xejdki" opened={open} onClick={close} label="close" />
 
               {offcanvasLinks.map((link) => (
-                <h3
+                <EnlaceMovil
                   key={link.id}
-                  id={link.id}
-                  className="brxe-swap-hover bc-swap-title"
-                  data-type="line"
-                  data-stagger="0.25"
-                >
-                  <a
-                    className="bc-swap-title__anchor"
-                    href={link.href || undefined}
-                    onClick={close}
-                  >
-                    <span className="bc-swap-title__span-wrapper">
-                      <span
-                        className="bc-swap-title__span"
-                        style={
-                          {
-                            "--after-content": `"${link.label}"`,
-                          } as CSSProperties
-                        }
-                      >
-                        {link.label}
-                      </span>
-                    </span>
-                  </a>
-                </h3>
+                  link={link}
+                  onNavigate={close}
+                  // Al cerrar el panel lateral se pliegan los acordeones.
+                  panelAbierto={open}
+                />
               ))}
 
               <div id="brxe-hklxtu" className="brxe-block">

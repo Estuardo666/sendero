@@ -5,7 +5,7 @@ import {
   metadataSeccion,
 } from "@/components/sites/sendero2-fmmarketingdigital-com-0ca8991d/noticias-d7674103/SeccionNoticias";
 
-const SECCION = { categoria: "noticias" };
+const SECCION = { categoria: "orgullo-sendero" };
 
 export async function generateMetadata(): Promise<Metadata> {
   return metadataSeccion(SECCION);

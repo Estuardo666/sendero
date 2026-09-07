@@ -1,6 +1,6 @@
 import { fetchGraphQL } from "@/lib/graphql";
 import type { WPGlobales } from "@/types/wp";
-import { ENLACE, MEDIA, REVALIDATE_LARGO } from "./fragments";
+import { ENLACE, ENLACE_CON_SUBMENU, MEDIA, REVALIDATE_LARGO } from "./fragments";
 
 const QUERY = `
   query Globales {
@@ -10,12 +10,12 @@ const QUERY = `
         logoCabecera { ${MEDIA} }
         logoPie { ${MEDIA} }
         telefonoPrincipal
-        email
+        correos { email etiqueta }
         whatsapp { numero mensaje etiquetaWidget enlaceCorto }
         tituloRedes
         redesSociales { red url }
-        menuEscritorio { ${ENLACE} }
-        menuDesplegable { ${ENLACE} }
+        menuEscritorio { ${ENLACE_CON_SUBMENU} }
+        menuDesplegable { ${ENLACE_CON_SUBMENU} }
         botonesCta { ${ENLACE} }
         enlacesPiePrincipales { ${ENLACE} }
         enlacesPieSecundarios { ${ENLACE} }

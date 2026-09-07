@@ -257,7 +257,8 @@ export interface ContactoSectionProps {
   antetitulo?: string;
   titulo?: string;
   telefono?: string;
-  email?: string;
+  /** Uno o varios correos de contacto, en el orden en que los ordenó el editor. */
+  correos?: { email: string; etiqueta?: string }[];
   tituloDirectorio?: string;
   directorio?: { area: string; telefono: string }[];
   tituloRedes?: string;
@@ -271,7 +272,7 @@ export function ContactoSection({
   antetitulo,
   titulo,
   telefono,
-  email,
+  correos,
   tituloDirectorio,
   directorio,
   tituloRedes,
@@ -281,6 +282,10 @@ export function ContactoSection({
   mapaLongitud,
 }: ContactoSectionProps = {}) {
   const coordenadas = `${mapaLatitud ?? "-3.9614687544471994"},${mapaLongitud ?? "-79.22471118700119"}`;
+
+  const correosVisibles = correos?.length
+    ? correos
+    : [{ email: "senderocdi@gmail.com" }];
 
   const filasDirectorio = directorio?.length
     ? directorio.map((entrada, indice) => ({
@@ -353,10 +358,15 @@ export function ContactoSection({
             <span className="contacto-icon">{WhatsAppIcon}</span>
             <span>{telefono ?? "0985970887"}</span>
           </li>
-          <li>
-            <span className="contacto-icon">{MailIcon}</span>
-            <span>{email ?? "senderocdi@gmail.com"}</span>
-          </li>
+          {correosVisibles.map((correo) => (
+            <li key={correo.email}>
+              <span className="contacto-icon">{MailIcon}</span>
+              <span>
+                {correo.etiqueta ? `${correo.etiqueta}: ` : ""}
+                {correo.email}
+              </span>
+            </li>
+          ))}
         </ul>
 
         <InteractiveDivider id="brxe-igdbhn" bendIntensity={100} height="2px" stroke="rgba(255, 193, 7, 0.63)" />

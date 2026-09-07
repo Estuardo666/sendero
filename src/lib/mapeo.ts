@@ -102,12 +102,35 @@ export function aNivelesCarrusel(
 
 /* ---------------- Noticias ---------------- */
 
+/** Dominio del sitio anterior, del que se migró el contenido. */
+const DOMINIO_ANTERIOR = "sendero2.fmmarketingdigital.com";
+
+/**
+ * Ruta de la noticia. `enlaceExterno` solo manda cuando apunta de verdad a otro
+ * sitio: las entradas migradas lo traen apuntando al sitio anterior y ese
+ * enlace se ignora para que la noticia se lea aquí.
+ */
+export function rutaNoticia(noticia: WPNoticia): string {
+  const externo = noticia.noticiaCampos?.enlaceExterno?.trim();
+
+  if (externo && !externo.includes(DOMINIO_ANTERIOR)) {
+    return externo;
+  }
+
+  return noticia.slug ? `/noticias/${noticia.slug}` : "/noticias/";
+}
+
+/** Nombre de la seccion (Noticias, Blog u Orgullo Sendero) a la que pertenece. */
+export function categoriaNoticia(noticia: WPNoticia): string | undefined {
+  return noticia.categoriasSendero?.nodes?.[0]?.name ?? undefined;
+}
+
 export function aNoticiasResumen(noticias: WPNoticia[]): NoticiaResumen[] {
   return noticias.map((noticia) => ({
     title: noticia.title,
     image: mediaUrl(noticia.featuredImage),
     alt: mediaAlt(noticia.featuredImage) || noticia.title,
-    href: noticia.noticiaCampos?.enlaceExterno || "/noticias/",
+    href: rutaNoticia(noticia),
   }));
 }
 
@@ -200,7 +223,7 @@ export function aArticulos(noticias: WPNoticia[]): Article[] {
     excerpt: noticia.noticiaCampos?.resumen ?? "",
     image: mediaUrl(noticia.featuredImage),
     alt: mediaAlt(noticia.featuredImage) || noticia.title,
-    href: noticia.noticiaCampos?.enlaceExterno || "#",
+    href: rutaNoticia(noticia),
     featured: Boolean(noticia.noticiaCampos?.destacada),
   }));
 }

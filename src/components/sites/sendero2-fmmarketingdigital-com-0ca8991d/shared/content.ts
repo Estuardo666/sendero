@@ -7,6 +7,8 @@ export interface Enlace {
   etiqueta: string;
   url: string;
   externo?: boolean;
+  /** Segundo nivel del encabezado. Como mucho hay dos niveles. */
+  hijos?: Enlace[];
 }
 
 export interface Imagen {
@@ -58,6 +60,7 @@ export function conIds<
       label: enlace.etiqueta,
       href: enlace.url,
       external: enlace.externo ?? false,
+      hijos: enlace.hijos,
     };
   });
 }

@@ -23,6 +23,8 @@ export interface WPEnlace {
   etiqueta: string | null;
   url: string | null;
   externo: boolean | null;
+  /** Segundo nivel. Solo lo traen los dos menús del encabezado. */
+  submenu?: WPEnlace[] | null;
 }
 
 export interface WPSeo {
@@ -47,7 +49,7 @@ export interface WPGlobales {
   logoCabecera: WPMedia | null;
   logoPie: WPMedia | null;
   telefonoPrincipal: string | null;
-  email: string | null;
+  correos: { email: string | null; etiqueta: string | null }[] | null;
   whatsapp: {
     numero: string | null;
     mensaje: string | null;
@@ -148,13 +150,19 @@ export interface WPNivel {
 
 export interface WPNoticia {
   title: string;
+  slug: string;
   date: string;
+  content: string | null;
   featuredImage: WPMedia | null;
   noticiaCampos: {
     resumen: string | null;
     destacada: boolean | null;
     enlaceExterno: string | null;
   } | null;
+  categoriasSendero?: {
+    nodes: { name: string | null; slug: string | null }[];
+  } | null;
+  seo?: WPSeo | null;
 }
 
 /* ---------------- Podcast ---------------- */

@@ -22,26 +22,26 @@ const ARTICLES: Article[] = [
     title: "Sendero lanza el programa “Pequeños Exploradores de la Naturaleza”",
     excerpt: "El Centro de Educación Sendero ha iniciado el programa \"Pequeños Exploradores de la Naturaleza\", una nueva iniciativa diseñada para que los estudiantes aprendan sobre biodiversidad, ecología y conservación de forma práctica y divertida. A través de salidas al aire libre, observaciones científicas y proyectos interactivos, los niños tendrán la oportunidad de descubrir la riqueza natural…",
     image: "Asset-2-80.jpg",
-    href: "https://sendero2.fmmarketingdigital.com/sendero-lanza-el-programa-pequenos-exploradores-de-la-naturaleza/",
+    href: "/noticias/pequenos-exploradores-de-la-naturaleza",
     featured: true,
   },
   {
     title: "Sendero obtiene reconocimiento por su enfoque educativo sostenible",
     excerpt: "Estamos orgullosos de anunciar que el Centro de Educación Sendero ha recibido el Premio a la Innovación Educativa Sostenible 2025, otorgado por la Asociación de Educación Ambiental del Ecuador. Este reconocimiento destaca nuestro compromiso con la formación integral de los estudiantes y la implementación de prácticas que promueven el respeto por el medio ambiente. Entre…",
     image: "457383708_1057851436347546_5414416323928490435_n.jpg",
-    href: "https://sendero2.fmmarketingdigital.com/sendero-obtiene-reconocimiento-por-su-enfoque-educativo-sostenible/",
+    href: "/noticias/reconocimiento-enfoque-educativo-sostenible",
   },
   {
     title: "Sendero implementa clases de cocina para fomentar la autonomía infantil",
     excerpt: "En Sendero, seguimos innovando para ofrecer una educación que trascienda las aulas. Este mes, lanzamos un programa de clases de cocina dirigido a nuestros estudiantes de Inicial II y la sección escolar. Esta iniciativa busca fomentar la autonomía, la creatividad y los hábitos saludables desde temprana edad. Durante estas clases, los niños aprenderán a preparar…",
     image: "461961500_1085542313578458_7159791732944626862_n.jpg",
-    href: "https://sendero2.fmmarketingdigital.com/sendero-implementa-clases-de-cocina-para-fomentar-la-autonomia-infantil/",
+    href: "/noticias/clases-de-cocina-autonomia-infantil",
   },
   {
     title: "Sendero inaugura un nuevo huerto escolar para los estudiantes",
     excerpt: "La iniciativa busca fortalecer la educación integral a través del contacto directo con la naturaleza. En Sendero, seguimos comprometidos con brindar una educación integral que conecte a nuestros estudiantes con el mundo que los rodea. El pasado viernes, inauguramos oficialmente nuestro nuevo huerto escolar, un espacio diseñado para que los niños y niñas aprendan sobre…",
     image: "457377374_1057851423014214_775123418499165545_n.jpg",
-    href: "https://sendero2.fmmarketingdigital.com/sendero-inaugura-un-nuevo-huerto-escolar-para-los-estudiantes/",
+    href: "/noticias/nuevo-huerto-escolar",
   },
 ];
 
@@ -56,6 +56,7 @@ const PAGE_CSS = `
 .noticias-page .news-eyebrow { margin: 0 0 16px; border-radius: 16px; background: rgba(255,193,7,.22); padding: 1px 10px 2px; color: #0099a5; font-size: 16px; font-weight: 600; line-height: 23px; }
 .noticias-page .news-title { margin: 0; color: #0099a5; font-size: clamp(54px,5.1vw,75px); font-weight: 800; line-height: 1.05; text-shadow: 2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,6px 0 #fdb92e,-6px 0 #fdb92e,0 6px #fdb92e,0 -6px #fdb92e,4px 4px #fdb92e,-4px -4px #fdb92e; }
 .noticias-page .news-down { display: grid; width: 40px; height: 40px; margin-top: 42px; place-items: center; border-radius: 50%; background: rgba(245,245,245,.8); color: #0099a5; font-size: 25px; }
+.noticias-page .news-vacio { position: relative; z-index: 1; margin-top: 35px; color: #363636; font-size: 15px; font-weight: 500; }
 .noticias-page .news-grid { display: grid; width: min(777px,100%); grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px 17px; margin-top: 35px; }
 .noticias-page .article-card { min-width: 0; transition: transform 220ms cubic-bezier(0.23,1,0.32,1); }
 .noticias-page .article-card.featured { grid-column: 1 / -1; }
@@ -98,7 +99,9 @@ export function NoticiasPage({
   titulo,
   articulos,
 }: NoticiasPageProps) {
-  const items = articulos?.length ? articulos : ARTICLES;
+  // Una lista vacía es una sección sin publicaciones todavía, no un fallo de
+  // conexión: solo se cae a la plantilla cuando no llega nada del backend.
+  const items = articulos ?? ARTICLES;
 
   return (
     <div className="sendero-root sendero-base15 noticias-page flex min-h-full flex-col">
@@ -116,6 +119,9 @@ export function NoticiasPage({
             </LetterLauncher>
             <span className="news-down" aria-hidden="true">↓</span>
           </div>
+          {items.length === 0 ? (
+            <p className="news-vacio">Todavía no hay publicaciones en esta sección.</p>
+          ) : null}
           <div className="news-grid">
             {items.map((article) => (
               <article className={`article-card${article.featured ? " featured" : ""}`} key={article.href}>

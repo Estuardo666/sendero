@@ -10,22 +10,22 @@ const NOTICIAS: NoticiaCard[] = [
   {
     title: "Sendero lanza el programa “Pequeños Exploradores de la Naturaleza”",
     image: `${IMG}/Asset-2-80.jpg`,
-    href: "/sendero-lanza-el-programa-pequenos-exploradores-de-la-naturaleza/",
+    href: "/noticias/pequenos-exploradores-de-la-naturaleza",
   },
   {
     title: "Sendero obtiene reconocimiento por su enfoque educativo sostenible",
     image: `${IMG}/457383708_1057851436347546_5414416323928490435_n.jpg`,
-    href: "/sendero-obtiene-reconocimiento-por-su-enfoque-educativo-sostenible/",
+    href: "/noticias/reconocimiento-enfoque-educativo-sostenible",
   },
   {
     title: "Sendero implementa clases de cocina para fomentar la autonomía infantil",
     image: `${IMG}/461961500_1085542313578458_7159791732944626862_n.jpg`,
-    href: "/sendero-implementa-clases-de-cocina-para-fomentar-la-autonomia-infantil/",
+    href: "/noticias/clases-de-cocina-autonomia-infantil",
   },
   {
     title: "Sendero inaugura un nuevo huerto escolar para los estudiantes",
     image: `${IMG}/457377374_1057851423014214_775123418499165545_n.jpg`,
-    href: "/sendero-inaugura-un-nuevo-huerto-escolar-para-los-estudiantes/",
+    href: "/noticias/nuevo-huerto-escolar",
   },
 ];
 
