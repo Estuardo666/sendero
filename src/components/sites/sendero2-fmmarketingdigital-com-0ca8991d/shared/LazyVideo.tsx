@@ -7,6 +7,13 @@ interface LazyVideoProps {
   className?: string;
   style?: React.CSSProperties;
   tabIndex?: number;
+  /**
+   * Skip the IntersectionObserver and attach the source on mount. The hero
+   * video is above the fold, and the observer never reports an intersection
+   * while the tab is loaded in the background, which left the hero grey.
+   */
+  eager?: boolean;
+  poster?: string;
 }
 
 /**
@@ -15,14 +22,22 @@ interface LazyVideoProps {
  * page videos eagerly (one is 50 MB) stalls the renderer, so we defer the
  * source and only start playback once the element is close to view.
  */
-export function LazyVideo({ src, className, style, tabIndex }: LazyVideoProps) {
+export function LazyVideo({
+  src,
+  className,
+  style,
+  tabIndex,
+  eager = false,
+  poster,
+}: LazyVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [load, setLoad] = useState(false);
+  const [load, setLoad] = useState(eager);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (eager) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -37,7 +52,7 @@ export function LazyVideo({ src, className, style, tabIndex }: LazyVideoProps) {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [eager]);
 
   useEffect(() => {
     const el = ref.current;
@@ -56,11 +71,12 @@ export function LazyVideo({ src, className, style, tabIndex }: LazyVideoProps) {
       onLoadedData={() => setReady(true)}
       onError={() => setReady(true)}
       tabIndex={tabIndex}
+      poster={poster}
       autoPlay
       loop
       muted
       playsInline
-      preload="none"
+      preload={eager ? "auto" : "none"}
       src={load ? src : undefined}
     />
   );

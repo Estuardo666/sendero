@@ -66,7 +66,7 @@ export function HeroSection({ video, titulo, texto, boton }: HeroSectionProps = 
       <style dangerouslySetInnerHTML={{ __html: HERO_CSS }} />
 
       <div className="brx-bg-video">
-        <LazyVideo src={video || VIDEO_SRC} />
+        <LazyVideo src={video || VIDEO_SRC} eager />
       </div>
 
       {/* #brxe-ywfgdp::before overlay gradient */}
